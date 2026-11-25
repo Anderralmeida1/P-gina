@@ -2,7 +2,8 @@
   "produto": "Análises de Defeito",
   "cidade": "Santa Rita do Sapucaí",
   "atualizadoEm": "11/11/2026",
-  "versoes": [
+  
+  "caso": [
     {
       
       "dataExtenso": "Data Limite: 10/01/2027",
@@ -14,7 +15,7 @@
       ]
     },
     {
-      "versao": "6.80",
+      "caso": "6.80",
       "data": "27/02/2026",
       "dataExtenso": "27 de fevereiro de 2026",
       "titulo": "Atualização de firmware - AMT 1000 Smart - 27/02/2026 - Versão 6.80",
