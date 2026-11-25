@@ -9,13 +9,13 @@
     {
       "nome": "Análises de Sugestões",
       "documentos": [
-        {"rotulo": "Análises", "arquivo": "analises-sugestao"}
+        {"rotulo": "Sugestões", "arquivo": "analises-sugestao"}
       ]
     },
     {
       "nome": "Análises de Falhas no Processo",
       "documentos": [
-        {"rotulo": "Análises", "arquivo": "analises-falha"}
+        {"rotulo": "Correção de manuais", "arquivo": "analises-falha"}
       ]
     }
   ]
