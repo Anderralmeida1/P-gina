@@ -1,0 +1,22 @@
+{
+  "modelos": [
+    {
+      "nome": "Análises de Defeito",
+      "documentos": [
+        {"rotulo": "Análises", "arquivo": "analises-defeito"}
+      ]
+    },
+    {
+      "nome": "Análises de Sugestões",
+      "documentos": [
+        {"rotulo": "Análises", "arquivo": "analises-sugestao"}
+      ]
+    },
+    {
+      "nome": "Análises de Falhas no Processo",
+      "documentos": [
+        {"rotulo": "Análises", "arquivo": "analises-falha"}
+      ]
+    }
+  ]
+}

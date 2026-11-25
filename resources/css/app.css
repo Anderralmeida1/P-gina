@@ -1,0 +1,8 @@
+/*
+  PLACEHOLDER — substitua este arquivo pelo app.css original do manual do Guardian:
+  https://guardian.intelbras.com/manual/guardian/resources/css/app.css
+  O projeto já funciona sem ele (style.css traz o essencial do layout),
+  mas com o original o visual fica 100% idêntico ao Guardian.
+*/
+html { scroll-behavior: auto; }
+a { text-decoration: none; }

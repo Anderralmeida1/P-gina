@@ -1,0 +1,284 @@
+/* Estilos próprios do Changelog (AMT 2018 E Smart) */
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  color: #333;
+  background: #fff;
+}
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+}
+
+/* ------------------------------------------------------------------ sidebar */
+#sidebar {
+  min-width: 280px;
+  max-width: 280px;
+  background: #f8f9fa;
+  border-right: 1px solid #e5e5e5;
+  transition: 0.3s;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+}
+#sidebar.active {
+  margin-left: -280px;
+}
+
+.sidebar-content {
+  padding: 1rem;
+}
+
+.sidebar-brand img {
+  max-width: 160px;
+  margin: 1rem auto;
+  display: block;
+}
+
+.sidebar-heading {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #6c757d;
+  padding: 0.5rem 1rem;
+  display: block;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #333;
+  text-decoration: none;
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  transition: background 0.2s, color 0.2s;
+}
+.sidebar-link:hover,
+.sidebar-link.active {
+  background: #e6f9ec;
+  color: #05a534;
+}
+.sidebar-link.active {
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------- layout */
+.main {
+  width: 100%;
+  min-height: 100vh;
+  min-width: 0;
+}
+
+.content {
+  padding: 2rem 1rem;
+}
+
+.line {
+  height: 1px;
+  background: #e5e5e5;
+  margin: 2rem 0;
+}
+
+/* Barra superior + hamburger (mesmo padrão do Guardian) */
+.navbar-bg {
+  background: #fff;
+  box-shadow: 0 0 2rem 0 rgba(33, 37, 41, 0.1);
+  padding: 0.75rem 1rem;
+}
+.sidebar-toggle {
+  cursor: pointer;
+  width: 26px;
+  height: 26px;
+}
+.hamburger,
+.hamburger:before,
+.hamburger:after {
+  cursor: pointer;
+  border-radius: 1px;
+  height: 3px;
+  width: 24px;
+  background: #495057;
+  display: block;
+  content: "";
+  transition: background 0.1s ease-in-out, top 0.1s ease-in-out, transform 0.1s ease-in-out;
+}
+.hamburger { position: relative; }
+.hamburger:before { position: absolute; top: -7px; width: 18px; }
+.hamburger:after { position: absolute; bottom: -7px; width: 12px; }
+.sidebar-toggle:hover .hamburger,
+.sidebar-toggle:hover .hamburger:before,
+.sidebar-toggle:hover .hamburger:after {
+  background: #06cb3f;
+}
+
+/* ----------------------------------------------------------------- cabeçalho */
+.img-logo {
+  max-width: 220px;
+  display: block;
+  margin: 0 auto;
+}
+.changelog-header {
+  text-align: center;
+}
+.changelog-header h2 {
+  margin-top: 1.5rem;
+  font-weight: 700;
+  color: #1f2d24;
+}
+.changelog-header h3 {
+  font-weight: 600;
+  color: #06a533;
+}
+.intro {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------ lista de versões
+   Todas as versões aparecem abertas, uma abaixo da outra. */
+.versao-item {
+  border: 1px solid #e5e5e5;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  scroll-margin-top: 5rem;
+}
+.versao-titulo {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  background: #06cb3f;
+}
+.versao-corpo {
+  padding: 1rem 1.25rem;
+}
+.versao-corpo h5 {
+  font-weight: 700;
+  color: #1f2d24;
+}
+.versao-corpo ul {
+  padding-left: 1.25rem;
+}
+.versao-corpo li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+.versao-corpo li::marker {
+  color: #06cb3f;
+}
+.versao-corpo .nota {
+  margin: 0.5rem 0 0;
+}
+
+.version-badge {
+  background: #06cb3f;
+  color: #fff;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.25rem;
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+}
+.versao-titulo .version-badge {
+  background: #fff;
+  color: #05a534;
+}
+
+/* ------------------------------------------------------------------ mobile */
+@media (max-width: 768px) {
+  #sidebar {
+    margin-left: -280px;
+    position: fixed;
+    z-index: 1000;
+  }
+  #sidebar.active {
+    margin-left: 0;
+  }
+  #manualContent {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* ======================================================================
+   Seleção de modelo (index.html) e menu "Documentos deste modelo"
+   ====================================================================== */
+.selecao {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.selecao-linha {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+.selecao-linha .form-select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.btn-intelbras {
+  background: #06cb3f;
+  color: #fff;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: none;
+}
+.btn-intelbras:hover,
+.btn-intelbras:focus {
+  background: #05a534;
+  color: #fff;
+}
+.btn-intelbras:disabled,
+.btn-intelbras.disabled {
+  background: #06cb3f;
+  color: #fff;
+  opacity: 0.45;
+}
+
+.cartao-modelo {
+  border: 1px solid #e5e5e5;
+  border-radius: 0.5rem;
+  box-shadow: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.cartao-modelo:hover {
+  border-color: #06cb3f;
+  box-shadow: 0 0.25rem 1rem rgba(6, 203, 63, 0.12);
+}
+.cartao-modelo .card-title {
+  font-weight: 700;
+  color: #1f2d24;
+}
+.cartao-docs {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.cartao-docs li + li {
+  margin-top: 0.5rem;
+}
+.cartao-docs a {
+  color: #05a534;
+  font-weight: 600;
+}
+.cartao-docs a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 576px) {
+  .selecao-linha {
+    flex-direction: column;
+  }
+}
