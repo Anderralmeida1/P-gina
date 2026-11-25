@@ -15,7 +15,7 @@
     {
       "nome": "Análises de Falhas no Processo",
       "documentos": [
-        {"rotulo": "Correção de manuais", "arquivo": "analises-falha"}
+        {"rotulo": "Correções de manuais", "arquivo": "analises-falha"}
       ]
     }
   ]
