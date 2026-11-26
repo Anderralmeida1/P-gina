@@ -27,10 +27,10 @@ function carregarChangelog() {
   $.getJSON(CHANGELOG_URL)
     .done(function (data) {
       changelogData = data;
-      atribuirIds(data.casos || []);
+      atribuirIds(data.versoes || []);
       renderCabecalho(data);
-      renderSidebar(data.casos || []);
-      renderCasos(data.casos || []);
+      renderSidebar(data.versoes || []);
+      renderVersoes(data.versoes || []);
       renderDocumentosDoModelo();
       bindBusca();
     })
@@ -53,14 +53,14 @@ function renderCabecalho(data) {
 }
 
 /* ------------------------------------------------------------------ sidebar */
-function renderSidebar(casos) {
+function renderSidebar(versoes) {
   var $ul = $('#sidebarVersions').empty();
 
   ordenarVersoes(versoes).forEach(function (v) {
     var $li = $('<li>');
-    var $a = $('<a>', { 'class': 'sidebar-link', href: '#caso-' + v._id });
+    var $a = $('<a>', { 'class': 'sidebar-link', href: '#versao-' + v._id });
     $a.append('<i class="fas fa-tag me-2"></i>');
-    $a.append(document.createTextNode('Caso ' + v.versao));
+    $a.append(document.createTextNode('Versão ' + v.versao));
     $a.append($('<small class="text-muted d-block ms-4">').text(v.data));
     $ul.append($li.append($a));
   });
@@ -90,109 +90,32 @@ function renderDocumentosDoModelo() {
 }
 
 /* ----------------------------------------------------------------- conteúdo */
-function renderCasos(casos) {
-  var $conteudo = $('#changelogContent').empty();
+function renderVersoes(versoes) {
+  var $c = $('#changelogContent').empty();
 
-  if (!Array.isArray(casos) || casos.length === 0) {
-    $conteudo.html(
-      '<div class="alert alert-warning">' +
-        'Nenhum caso cadastrado.' +
-      '</div>'
-    );
+  if (!versoes || !versoes.length) {
+    $c.html('<div class="alert alert-warning">Nenhuma versão disponível.</div>');
     return;
   }
 
-  ordenarCasos(casos).forEach(function (caso, indice) {
-    var id = 'caso-' + gerarId(caso.caso || indice);
-    var criticidade = caso.criticidade || 'Não informada';
-    var classeCriticidade = normalizarCriticidade(criticidade);
+  ordenarVersoes(versoes).forEach(function (v) {
+    var id = v._id;
 
-    var imagem = caso.imagem
-      ? '<img src="' + esc(caso.imagem) + '" alt="Imagem do caso ' +
-          esc(caso.caso) + '">'
-      : '';
-
+    // Todas as versões ficam sempre visíveis (sem accordion / sem precisar clicar)
     var html =
-      '<article class="caso-card" id="' + id + '">' +
-        '<header class="caso-faixa ' + classeCriticidade + '">' +
-          '<strong class="caso-numero">' +
-            'CASO - ' + esc(caso.caso || 'NÃO INFORMADO') +
-          '</strong>' +
-
-          '<strong class="caso-criticidade">' +
-            esc(criticidade) +
-          '</strong>' +
-        '</header>' +
-
-        '<div class="caso-conteudo">' +
-          '<div class="caso-imagem">' +
-            imagem +
-          '</div>' +
-
-          '<div class="caso-detalhes">' +
-            '<div class="caso-datas">' +
-              '<div class="caso-data-abertura">' +
-                '<span>DATA DE ABERTURA:</span>' +
-                '<strong>' +
-                  esc(caso.dataAbertura || 'Não informada') +
-                '</strong>' +
-              '</div>' +
-
-              '<div class="caso-data-limite">' +
-                'Data Limite: ' +
-                esc(caso.dataLimite || 'Não informada') +
-              '</div>' +
-            '</div>' +
-
-            '<section class="caso-resumo">' +
-              '<h3>RESUMO:</h3>' +
-              renderLista(caso.resumo || []) +
-            '</section>' +
-          '</div>' +
+      '<article class="versao-item" id="versao-' + id + '">' +
+        '<h2 class="versao-titulo">' +
+          'Versão ' + esc(v.versao) + '<span class="version-badge">' + esc(v.data) + '</span>' +
+        '</h2>' +
+        '<div class="versao-corpo">' +
+          '<h5>' + esc(v.titulo) + '</h5>' +
+          '<p class="text-muted"><i>' + esc(v.dataExtenso) + '</i></p>' +
+          renderLista(v.alteracoes) +
         '</div>' +
       '</article>';
 
-    $conteudo.append(html);
+    $c.append(html);
   });
-}
-
-function ordenarCasos(casos) {
-  return casos.slice().sort(function (a, b) {
-    return parseDataCaso(b.dataAbertura) - parseDataCaso(a.dataAbertura);
-  });
-}
-
-function parseDataCaso(data) {
-  var partes = String(data || '').split('/');
-
-  if (partes.length !== 3) {
-    return new Date(0);
-  }
-
-  return new Date(
-    Number(partes[2]),
-    Number(partes[1]) - 1,
-    Number(partes[0])
-  );
-}
-
-function gerarId(valor) {
-  return String(valor)
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
-function normalizarCriticidade(criticidade) {
-  var valor = normalizar(criticidade || '');
-
-  if (valor === 'critica') return 'criticidade-critica';
-  if (valor === 'alta') return 'criticidade-alta';
-  if (valor === 'media') return 'criticidade-media';
-  if (valor === 'baixa') return 'criticidade-baixa';
-
-  return 'criticidade-padrao';
 }
 
 /* Cada item de "alteracoes" pode ser uma string ou, opcionalmente, um objeto
@@ -212,16 +135,23 @@ function renderLista(itens) {
   return h + '</ul>';
 }
 
-function filtrarCasos(termo) {
-  var casos = (changelogData && changelogData.casos) || [];
+/* ------------------------------------------------------------------- busca */
+function bindBusca() {
+  $('#buscaInput').on('input', function () {
+    filtrarVersoes($(this).val().toLowerCase().trim());
+  });
+}
+
+function filtrarVersoes(termo) {
+  var versoes = (changelogData && changelogData.versoes) || [];
 
   if (!termo) {
-    renderCasos(casos);
+    renderVersoes(versoes);
     return;
   }
 
   var t = normalizar(termo);
-  var filtradas = casos.filter(function (v) {
+  var filtradas = versoes.filter(function (v) {
     var texto = [v.versao, v.data, v.dataExtenso, v.titulo].concat(textosDe(v.alteracoes)).join(' ');
     return normalizar(texto).indexOf(t) !== -1;
   });
@@ -232,15 +162,15 @@ function filtrarCasos(termo) {
     );
     return;
   }
-  renderCasos(filtradas);   // o sidebar NÃO é filtrado
+  renderVersoes(filtradas);   // o sidebar NÃO é filtrado
 }
 
 /* Clique no sidebar numa versão que o filtro escondeu: limpa a busca e rola até ela */
-$(document).on('click', '#sidebarVersions a[href^="#caso-"]', function () {
+$(document).on('click', '#sidebarVersions a[href^="#versao-"]', function () {
   var id = $(this).attr('href').substring(1);
   if ($('#' + id).length || !changelogData) { return; }
   $('#buscaInput').val('');
-  renderCasos(changelogData.casos);
+  renderVersoes(changelogData.versoes);
   $(this).trigger('click');
 });
 
@@ -250,22 +180,22 @@ function parseData(str) {
   return new Date(p[2], p[1] - 1, p[0]);
 }
 
-function ordenarCasos(casos) {
-  return casos.slice().sort(function (a, b) {
+function ordenarVersoes(versoes) {
+  return versoes.slice().sort(function (a, b) {
     return parseData(b.data) - parseData(a.data);
   });
 }
 
 /* Id da versão para o HTML/âncoras (só letras, números e hífen) */
-function slug(casos) {
-  return String(casos).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'v';
+function slug(versao) {
+  return String(versao).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'v';
 }
 
 /* Dá a cada versão um id único (se a mesma versão aparecer 2x, o 2º vira "-2", etc.) */
-function atribuirIds(casos) {
+function atribuirIds(versoes) {
   var usados = {};
-  ordenarVersoes(casos).forEach(function (v) {
-    var base = slug(v.caso);
+  ordenarVersoes(versoes).forEach(function (v) {
+    var base = slug(v.versao);
     usados[base] = (usados[base] || 0) + 1;
     v._id = usados[base] > 1 ? base + '-' + usados[base] : base;
   });
