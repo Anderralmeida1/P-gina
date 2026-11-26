@@ -62,12 +62,23 @@
       <main id="content" class="content">
         <div class="container col-9" id="manualContent">
 
-          <header class="changelog-header text-center">
-            
-            <h2 id="headerTitulo">Atualização de firmware</h2>
-            <h3 id="headerProduto"></h3>
-            <h6 id="headerData" class="text-muted"></h6>
-            
+          <header class="changelog-header">
+            <h6 id="headerData" class="text-muted text-end"></h6>
+
+            <div class="caso-barra">
+              <h2 id="headerCaso" class="mb-0">CASO - XXXXXXX</h2>
+              <h2 id="headerCriticidade" class="mb-0">CRITICIDADE</h2>
+            </div>
+
+            <div class="caso-resumo">
+              <div class="caso-infos">
+                <h3>DATA DE ABERTURA:</h3>
+                <span id="headerDataAbertura"></span>
+                <em id="headerDataLimite"></em>
+              </div>
+              <h3>RESUMO</h3>
+              <ul id="headerResumo"></ul>
+            </div>
           </header>
 
           <section id="changelogContent"></section>

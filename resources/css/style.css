@@ -127,16 +127,74 @@ body {
   margin: 0 auto;
 }
 .changelog-header {
-  text-align: center;
+  text-align: left;
+  margin-bottom: 1rem;
 }
-.changelog-header h2 {
-  margin-top: 1.5rem;
-  font-weight: 700;
-  color: #1f2d24;
-}
+.changelog-header h2,
 .changelog-header h3 {
-  font-weight: 600;
-  color: #06a533;
+  font-weight: 700;
+}
+.changelog-header #headerData {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+}
+.caso-barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #69c46b;
+  border-radius: 0.5rem 0.5rem 0 0;
+  padding: 0.75rem 1.25rem;
+}
+.caso-barra h2 {
+  color: #1f2d24;
+  font-size: 1.55rem;
+  letter-spacing: 0.04em;
+}
+.caso-barra h2:last-child {
+  text-transform: uppercase;
+}
+.caso-resumo {
+  border: 1px solid #e5e5e5;
+  border-top: 0;
+  border-radius: 0 0 0.5rem 0.5rem;
+  padding: 1.25rem 1.25rem 1.5rem;
+  box-shadow: 0 1px 2px rgba(33, 37, 41, 0.04);
+}
+.caso-resumo h3 {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  color: #1f2d24;
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+}
+.caso-infos {
+  position: relative;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+.caso-infos h3 {
+  margin-right: 0.35rem;
+}
+.caso-infos span {
+  margin-left: 0.35rem;
+  font-weight: 700;
+}
+.caso-infos em {
+  position: absolute;
+  right: 0;
+  color: #6c757d;
+}
+.caso-resumo ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.caso-resumo li {
+  color: #08a33a;
+  margin-bottom: 0.35rem;
+}
+.caso-resumo li::marker {
+  color: #08a33a;
 }
 .intro {
   font-size: 1.05rem;
@@ -208,6 +266,17 @@ body {
   #manualContent {
     width: 100%;
     max-width: 100%;
+  }
+  .caso-barra h2 {
+    font-size: 1.1rem;
+  }
+  .caso-infos {
+    text-align: left;
+  }
+  .caso-infos em {
+    position: static;
+    display: block;
+    margin-top: 0.25rem;
   }
 }
 
