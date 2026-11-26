@@ -1,10 +1,12 @@
-/* Changelog: carrega o JSON do modelo escolhido, monta cabeçalho, sidebar e lista de versões.
+/* Changelog: carrega o JSON do modelo escolhido, monta cabeçalho, sidebar e lista de versões,
+   e filtra em tempo real.
 
    O modelo vem da URL:  changelog.html?modelo=amt-8000-pro
    -> lê  resources/data/amt-8000-pro.json                                              */
 var MODELOS_URL = 'resources/data/modelos.json';
 var MODELO = modeloDaUrl();
 var CHANGELOG_URL = 'resources/data/' + MODELO + '.json';
+var changelogData = null;
 
 $(document).ready(function () {
   if (!MODELO) {
@@ -24,11 +26,13 @@ function modeloDaUrl() {
 function carregarChangelog() {
   $.getJSON(CHANGELOG_URL)
     .done(function (data) {
+      changelogData = data;
       atribuirIds(data.versoes || []);
       renderCabecalho(data);
       renderSidebar(data.versoes || []);
       renderVersoes(data.versoes || []);
       renderDocumentosDoModelo();
+      bindBusca();
     })
     .fail(function () {
       $('#changelogContent').html(
@@ -42,19 +46,9 @@ function carregarChangelog() {
 
 /* ---------------------------------------------------------------- cabeçalho */
 function renderCabecalho(data) {
+  $('#headerTitulo').text(' ');
+  $('#headerProduto').text(data.produto || '');
   $('#headerData').text('Atualizado em ' + (data.atualizadoEm || ''));
-
-  var caso = (data.casos || [])[0] || {};
-  $('#headerCaso').text('CASO - ' + (caso.caso || 'XXXXXXX'));
-  $('#headerCriticidade').text((caso.criticidade || 'CRITICIDADE').toUpperCase());
-  $('#headerDataAbertura').text(caso.dataAbertura || '');
-  $('#headerDataLimite').text(caso.dataLimite ? 'Data Limite: ' + caso.dataLimite : '');
-
-  var $resumo = $('#headerResumo').empty();
-  (caso.resumo || []).forEach(function (item) {
-    $resumo.append($('<li>').text(item));
-  });
-
   document.title = 'Changelog - ' + data.produto + ' | Intelbras';
 }
 
@@ -141,6 +135,45 @@ function renderLista(itens) {
   return h + '</ul>';
 }
 
+/* ------------------------------------------------------------------- busca */
+function bindBusca() {
+  $('#buscaInput').on('input', function () {
+    filtrarVersoes($(this).val().toLowerCase().trim());
+  });
+}
+
+function filtrarVersoes(termo) {
+  var versoes = (changelogData && changelogData.versoes) || [];
+
+  if (!termo) {
+    renderVersoes(versoes);
+    return;
+  }
+
+  var t = normalizar(termo);
+  var filtradas = versoes.filter(function (v) {
+    var texto = [v.versao, v.data, v.dataExtenso, v.titulo].concat(textosDe(v.alteracoes)).join(' ');
+    return normalizar(texto).indexOf(t) !== -1;
+  });
+
+  if (!filtradas.length) {
+    $('#changelogContent').html(
+      '<div class="alert alert-warning">Nenhum resultado encontrado para: <b>' + esc(termo) + '</b></div>'
+    );
+    return;
+  }
+  renderVersoes(filtradas);   // o sidebar NÃO é filtrado
+}
+
+/* Clique no sidebar numa versão que o filtro escondeu: limpa a busca e rola até ela */
+$(document).on('click', '#sidebarVersions a[href^="#versao-"]', function () {
+  var id = $(this).attr('href').substring(1);
+  if ($('#' + id).length || !changelogData) { return; }
+  $('#buscaInput').val('');
+  renderVersoes(changelogData.versoes);
+  $(this).trigger('click');
+});
+
 /* ---------------------------------------------------------------- utilitários */
 function parseData(str) {
   var p = String(str).split('/');
@@ -181,3 +214,18 @@ function fmt(s) {
     .replace(/\n/g, '<br>');
 }
 
+function normalizar(s) {
+  return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+
+function textosDe(itens) {
+  var out = [];
+  (itens || []).forEach(function (it) {
+    if (typeof it === 'string') { out.push(it); return; }
+    out.push(it.texto || '');
+    if (it.obs) { out.push(it.obs); }
+    if (it.nota) { out.push(it.nota); }
+    out = out.concat(textosDe(it.subitens));
+  });
+  return out;
+}

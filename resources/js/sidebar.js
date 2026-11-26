@@ -21,7 +21,7 @@ $(function () {
     var $link = $(this);
     var id = $link.attr('href').substring(1);          // ex.: versao-6-80
     var $item = $('#' + id);
-    if (!$item.length) { return; }
+    if (!$item.length) { return; }                      // item fora do filtro: tratado em changelog.js
 
     $('#sidebarVersions a.sidebar-link').removeClass('active');
     $link.addClass('active');
