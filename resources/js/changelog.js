@@ -14,7 +14,7 @@ $(document).ready(function () {
     return;
   }
   carregarChangelog();
-});
+})
 
 /* Aceita apenas letras minúsculas, números e hífen (o nome do arquivo .json) */
 function modeloDaUrl() {
