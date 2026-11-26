@@ -1,34 +1,17 @@
 {
   "produto": "Análises de Defeito",
-  "cidade": "Santa Rita do Sapucaí",
-  "atualizadoEm": "11/11/2026",
-  "versoes": 
-  [
+  "atualizadoEm": "26/11/2026",
+  "casos": [
     {
-      "versao": "Caso - xxxxxxxxxxxxx --- Baixa",
-      "dataExtenso": "Data de Abertura 10/06/2026 - Data Limite: 10/01/2027 ",
-      "alteracoes": [
-        "Defeito Reclamado ou duvida: Quando selecionado o modelo incorreto, para acessar a AMT 2018 E3G pelo AMT REMOTO DESKTOP, a central perde comunicação ethernet.",
-        "Perde também a comunicação com a empresa de monitoramento.E volta a conexão se reiniciar a central.",
-        "Melhoria na comunicação do barramento"
-        
-      ]
-    },
-    {
-      "versao": "6.80",
-      "data": "27/02/2026",
-      "dataExtenso": "27 de fevereiro de 2026",
-      "titulo": "Atualização de firmware - AMT 1000 Smart - 27/02/2026 - Versão 6.80",
-      "alteracoes": [
-        {
-          "texto": "Implementada atualização remota via modulo 4G",
-          "obs": "O processo leva por volta de 1 hora e a central será atualizada no final do download"
-        },
-        "Melhoria na conexão por ethernet",
-        "Melhoria na falha de supervisão Smart quando vinculado a câmera/gravador",
-        "Melhoria na função de entrada liga quando configurada como NA",
-        "Melhoria no sincronismo dos dispositivos sem fio assim que eles são apagados ou cadastrados",
-        "Melhoria no sincronismo dos dados quando está online com o AMT Remoto"
+      "caso": "12345678",
+      "criticidade": "Baixa",
+      "dataAbertura": "26/11/2026",
+      "dataLimite": "10/01/2027",
+      "imagem": "",
+      "resumo": [
+        "Defeito reclamado ou dúvida: descrever o problema apresentado.",
+        "Informar os impactos observados no produto ou processo.",
+        "Informar detalhes adicionais necessários para a análise."
       ]
     }
   ]
