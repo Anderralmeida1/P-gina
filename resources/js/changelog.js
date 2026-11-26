@@ -91,31 +91,108 @@ function renderDocumentosDoModelo() {
 
 /* ----------------------------------------------------------------- conteúdo */
 function renderCasos(casos) {
-  var $c = $('#changelogContent').empty();
+  var $conteudo = $('#changelogContent').empty();
 
-  if (!casos || !casos.length) {
-    $c.html('<div class="alert alert-warning">Nenhum caso disponível.</div>');
+  if (!Array.isArray(casos) || casos.length === 0) {
+    $conteudo.html(
+      '<div class="alert alert-warning">' +
+        'Nenhum caso cadastrado.' +
+      '</div>'
+    );
     return;
   }
 
-  ordenarCasos(casos).forEach(function (v) {
-    var id = v._id;
+  ordenarCasos(casos).forEach(function (caso, indice) {
+    var id = 'caso-' + gerarId(caso.caso || indice);
+    var criticidade = caso.criticidade || 'Não informada';
+    var classeCriticidade = normalizarCriticidade(criticidade);
 
-    // Todos os casos ficam sempre visíveis (sem accordion / sem precisar clicar)
+    var imagem = caso.imagem
+      ? '<img src="' + esc(caso.imagem) + '" alt="Imagem do caso ' +
+          esc(caso.caso) + '">'
+      : '';
+
     var html =
-      '<article class="caso-item" id="caso-' + id + '">' +
-        '<h2 class="caso-titulo">' +
-          'Caso ' + esc(v.versao) + '<span class="version-badge">' + esc(v.data) + '</span>' +
-        '</h2>' +
-        '<div class="caso-corpo">' +
-          '<h5>' + esc(v.titulo) + '</h5>' +
-          '<p class="text-muted"><i>' + esc(v.dataExtenso) + '</i></p>' +
-          renderLista(v.alteracoes) +
+      '<article class="caso-card" id="' + id + '">' +
+        '<header class="caso-faixa ' + classeCriticidade + '">' +
+          '<strong class="caso-numero">' +
+            'CASO - ' + esc(caso.caso || 'NÃO INFORMADO') +
+          '</strong>' +
+
+          '<strong class="caso-criticidade">' +
+            esc(criticidade) +
+          '</strong>' +
+        '</header>' +
+
+        '<div class="caso-conteudo">' +
+          '<div class="caso-imagem">' +
+            imagem +
+          '</div>' +
+
+          '<div class="caso-detalhes">' +
+            '<div class="caso-datas">' +
+              '<div class="caso-data-abertura">' +
+                '<span>DATA DE ABERTURA:</span>' +
+                '<strong>' +
+                  esc(caso.dataAbertura || 'Não informada') +
+                '</strong>' +
+              '</div>' +
+
+              '<div class="caso-data-limite">' +
+                'Data Limite: ' +
+                esc(caso.dataLimite || 'Não informada') +
+              '</div>' +
+            '</div>' +
+
+            '<section class="caso-resumo">' +
+              '<h3>RESUMO:</h3>' +
+              renderLista(caso.resumo || []) +
+            '</section>' +
+          '</div>' +
         '</div>' +
       '</article>';
 
-    $c.append(html);
+    $conteudo.append(html);
   });
+}
+
+function ordenarCasos(casos) {
+  return casos.slice().sort(function (a, b) {
+    return parseDataCaso(b.dataAbertura) - parseDataCaso(a.dataAbertura);
+  });
+}
+
+function parseDataCaso(data) {
+  var partes = String(data || '').split('/');
+
+  if (partes.length !== 3) {
+    return new Date(0);
+  }
+
+  return new Date(
+    Number(partes[2]),
+    Number(partes[1]) - 1,
+    Number(partes[0])
+  );
+}
+
+function gerarId(valor) {
+  return String(valor)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function normalizarCriticidade(criticidade) {
+  var valor = normalizar(criticidade || '');
+
+  if (valor === 'critica') return 'criticidade-critica';
+  if (valor === 'alta') return 'criticidade-alta';
+  if (valor === 'media') return 'criticidade-media';
+  if (valor === 'baixa') return 'criticidade-baixa';
+
+  return 'criticidade-padrao';
 }
 
 /* Cada item de "alteracoes" pode ser uma string ou, opcionalmente, um objeto
