@@ -2,11 +2,11 @@
   "produto": "Análises de Defeito",
   "cidade": "Santa Rita do Sapucaí",
   "atualizadoEm": "11/11/2026",
-  "caso": 
+  "versoes": 
   [
     {
-      
-      "dataExtenso": "Data Limite: 10/01/2027",
+      "versao": "Caso - xxxxxxxxxxxxx --- Baixa",
+      "dataExtenso": "Data de Abertura 10/06/2026 - Data Limite: 10/01/2027 ",
       "alteracoes": [
         "Defeito Reclamado ou duvida: Quando selecionado o modelo incorreto, para acessar a AMT 2018 E3G pelo AMT REMOTO DESKTOP, a central perde comunicação ethernet.",
         "Perde também a comunicação com a empresa de monitoramento.E volta a conexão se reiniciar a central.",
