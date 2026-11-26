@@ -90,7 +90,7 @@ function renderDocumentosDoModelo() {
 }
 
 /* ----------------------------------------------------------------- conteúdo */
-function renderVersoes(casos) {
+function renderCasos(casos) {
   var $c = $('#changelogContent').empty();
 
   if (!casos || !casos.length) {
@@ -135,13 +135,6 @@ function renderLista(itens) {
   return h + '</ul>';
 }
 
-/* ------------------------------------------------------------------- busca */
-function bindBusca() {
-  $('#buscaInput').on('input', function () {
-    filtrarVersoes($(this).val().toLowerCase().trim());
-  });
-}
-
 function filtrarCasos(termo) {
   var casos = (changelogData && changelogData.casos) || [];
 
@@ -170,7 +163,7 @@ $(document).on('click', '#sidebarVersions a[href^="#caso-"]', function () {
   var id = $(this).attr('href').substring(1);
   if ($('#' + id).length || !changelogData) { return; }
   $('#buscaInput').val('');
-  renderVersoes(changelogData.versoes);
+  renderCasos(changelogData.casos);
   $(this).trigger('click');
 });
 
@@ -180,7 +173,7 @@ function parseData(str) {
   return new Date(p[2], p[1] - 1, p[0]);
 }
 
-function ordenarVersoes(casos) {
+function ordenarCasos(casos) {
   return casos.slice().sort(function (a, b) {
     return parseData(b.data) - parseData(a.data);
   });
