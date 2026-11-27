@@ -46,6 +46,16 @@ body {
   padding: 0.5rem 1rem;
   display: block;
 }
+.sidebar-heading-count {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sidebar-heading-count .badge {
+  background: #06cb3f;
+  color: #fff;
+  font-size: 0.75rem;
+}
 
 .sidebar-nav {
   list-style: none;
@@ -161,10 +171,33 @@ body {
   color: #fff;
   background: #06cb3f;
 }
+.caso-titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.caso-titulo .version-badge {
+  margin-left: auto;
+}
+.caso-periodo {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.caso-periodo p {
+  margin-bottom: 0.75rem;
+}
+.caso-periodo .data-limite-proxima {
+  color: #dc3545 !important;
+}
 .versao-corpo {
   padding: 1rem 1.25rem;
 }
 .versao-corpo h5 {
+  font-weight: 700;
+  color: #1f2d24;
+}
+.caso-resumo-titulo {
   font-weight: 700;
   color: #1f2d24;
 }
@@ -194,6 +227,18 @@ body {
   background: #fff;
   color: #05a534;
 }
+.versao-titulo .criticidade-baixa {
+  color: #198754;
+}
+.versao-titulo .criticidade-media {
+  color: #d98200;
+}
+.versao-titulo .criticidade-alta {
+  color: #f08080;
+}
+.versao-titulo .criticidade-muito-alta {
+  color: #dc3545;
+}
 
 /* ------------------------------------------------------------------ mobile */
 @media (max-width: 768px) {
@@ -208,6 +253,10 @@ body {
   #manualContent {
     width: 100%;
     max-width: 100%;
+  }
+  .caso-periodo {
+    flex-wrap: wrap;
+    gap: 0 0.5rem;
   }
 }
 

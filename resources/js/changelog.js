@@ -27,10 +27,11 @@ function carregarChangelog() {
   $.getJSON(CHANGELOG_URL)
     .done(function (data) {
       changelogData = data;
-      atribuirIds(data.versoes || []);
+      var registros = data.casos || data.versoes || [];
+      atribuirIds(registros);
       renderCabecalho(data);
-      renderSidebar(data.versoes || []);
-      renderVersoes(data.versoes || []);
+      renderSidebar(registros);
+      renderVersoes(registros);
       renderDocumentosDoModelo();
       bindBusca();
     })
@@ -49,19 +50,18 @@ function renderCabecalho(data) {
   $('#headerTitulo').text(' ');
   $('#headerProduto').text(data.produto || '');
   $('#headerData').text('Atualizado em ' + (data.atualizadoEm || ''));
-  document.title = 'Changelog - ' + data.produto + ' | Intelbras';
+  document.title = 'Painel PV';
 }
 
 /* ------------------------------------------------------------------ sidebar */
 function renderSidebar(versoes) {
   var $ul = $('#sidebarVersions').empty();
+  $('#contadorCasos').text(versoes.length);
 
   ordenarVersoes(versoes).forEach(function (v) {
     var $li = $('<li>');
     var $a = $('<a>', { 'class': 'sidebar-link', href: '#versao-' + v._id });
-    $a.append('<i class="fas fa-tag me-2"></i>');
-    $a.append(document.createTextNode('Versão ' + v.versao));
-    $a.append($('<small class="text-muted d-block ms-4">').text(v.data));
+    $a.append(document.createTextNode('Caso ' + (v.caso || v.versao || '')));
     $ul.append($li.append($a));
   });
 
@@ -94,28 +94,72 @@ function renderVersoes(versoes) {
   var $c = $('#changelogContent').empty();
 
   if (!versoes || !versoes.length) {
-    $c.html('<div class="alert alert-warning">Nenhuma versão disponível.</div>');
+    $c.html('<div class="alert alert-warning">Nenhum caso disponível.</div>');
     return;
   }
 
   ordenarVersoes(versoes).forEach(function (v) {
     var id = v._id;
+    var classeCriticidade = classeDaCriticidade(v.criticidade);
+    var classeDataLimite = dataLimiteEmAte15Dias(
+      v.dataLimite,
+      changelogData && changelogData.atualizadoEm
+    ) ? ' data-limite-proxima' : '';
 
-    // Todas as versões ficam sempre visíveis (sem accordion / sem precisar clicar)
     var html =
       '<article class="versao-item" id="versao-' + id + '">' +
-        '<h2 class="versao-titulo">' +
-          'Versão ' + esc(v.versao) + '<span class="version-badge">' + esc(v.data) + '</span>' +
+        '<h2 class="versao-titulo caso-titulo">' +
+          'CASO - ' + esc(v.caso || 'XXXXXXX') +
+          '<span class="version-badge ' + classeCriticidade + '">' +
+            esc((v.criticidade || 'Criticidade').toUpperCase()) +
+          '</span>' +
         '</h2>' +
         '<div class="versao-corpo">' +
-          '<h5>' + esc(v.titulo) + '</h5>' +
-          '<p class="text-muted"><i>' + esc(v.dataExtenso) + '</i></p>' +
-          renderLista(v.alteracoes) +
+            '<div class="caso-periodo">' +
+              '<p class="text-muted"><i>Data de Abertura: ' + esc(v.dataAbertura || '') + '</i></p>' +
+              '<p class="text-muted' + classeDataLimite + '"><i>Data Limite: ' + esc(v.dataLimite || '') + '</i></p>' +
+            '</div>' +
+          '<h5 class="caso-resumo-titulo">Resumo</h5>' +
+          renderLista(v.resumo) +
         '</div>' +
       '</article>';
 
     $c.append(html);
   });
+}
+
+function dataLimiteEmAte15Dias(dataLimite, dataAtualizacao) {
+  var limite = parseData(dataLimite);
+  var atualizacao = parseData(dataAtualizacao);
+
+  if (isNaN(limite.getTime()) || isNaN(atualizacao.getTime())) {
+    return false;
+  }
+
+  var limiteUtc = Date.UTC(limite.getFullYear(), limite.getMonth(), limite.getDate());
+  var atualizacaoUtc = Date.UTC(
+    atualizacao.getFullYear(),
+    atualizacao.getMonth(),
+    atualizacao.getDate()
+  );
+  var diasRestantes = (limiteUtc - atualizacaoUtc) / 86400000;
+
+  return diasRestantes <= 15;
+}
+
+function classeDaCriticidade(criticidade) {
+  var valor = String(criticidade || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
+  switch (valor) {
+    case 'baixa': return 'criticidade-baixa';
+    case 'media': return 'criticidade-media';
+    case 'alta': return 'criticidade-alta';
+    case 'muito alta': return 'criticidade-muito-alta';
+    default: return '';
+  }
 }
 
 /* Cada item de "alteracoes" pode ser uma string ou, opcionalmente, um objeto
@@ -143,7 +187,7 @@ function bindBusca() {
 }
 
 function filtrarVersoes(termo) {
-  var versoes = (changelogData && changelogData.versoes) || [];
+  var versoes = (changelogData && (changelogData.casos || changelogData.versoes)) || [];
 
   if (!termo) {
     renderVersoes(versoes);
@@ -152,7 +196,10 @@ function filtrarVersoes(termo) {
 
   var t = normalizar(termo);
   var filtradas = versoes.filter(function (v) {
-    var texto = [v.versao, v.data, v.dataExtenso, v.titulo].concat(textosDe(v.alteracoes)).join(' ');
+    var texto = [
+      v.caso, v.criticidade, v.dataAbertura, v.dataLimite,
+      v.versao, v.data, v.dataExtenso, v.titulo
+    ].concat(textosDe(v.resumo), textosDe(v.alteracoes)).join(' ');
     return normalizar(texto).indexOf(t) !== -1;
   });
 
@@ -170,7 +217,7 @@ $(document).on('click', '#sidebarVersions a[href^="#versao-"]', function () {
   var id = $(this).attr('href').substring(1);
   if ($('#' + id).length || !changelogData) { return; }
   $('#buscaInput').val('');
-  renderVersoes(changelogData.versoes);
+  renderVersoes(changelogData.casos || changelogData.versoes || []);
   $(this).trigger('click');
 });
 
@@ -182,7 +229,7 @@ function parseData(str) {
 
 function ordenarVersoes(versoes) {
   return versoes.slice().sort(function (a, b) {
-    return parseData(b.data) - parseData(a.data);
+    return parseData(b.dataAbertura || b.data) - parseData(a.dataAbertura || a.data);
   });
 }
 
@@ -195,7 +242,7 @@ function slug(versao) {
 function atribuirIds(versoes) {
   var usados = {};
   ordenarVersoes(versoes).forEach(function (v) {
-    var base = slug(v.versao);
+    var base = slug(v.caso || v.versao);
     usados[base] = (usados[base] || 0) + 1;
     v._id = usados[base] > 1 ? base + '-' + usados[base] : base;
   });

@@ -6,6 +6,36 @@
       "caso": "12345678",
       "criticidade": "Baixa",
       "dataAbertura": "26/11/2026",
+      "dataLimite": "01/12/2026",
+      "imagem": "",
+      "resumo": [
+        "Não prioriza a programação de ATV e DTV para feriados, executando os horários configurados para o dia da semana correspondente."
+      ]
+    },
+    {
+      "caso": "12345678",
+      "criticidade": "Média",
+      "dataAbertura": "26/11/2026",
+      "dataLimite": "10/01/2027",
+      "imagem": "",
+      "resumo": [
+        "Não prioriza a programação de ATV e DTV para feriados, executando os horários configurados para o dia da semana correspondente."
+      ]
+    },
+    {
+      "caso": "12345678",
+      "criticidade": "Alta",
+      "dataAbertura": "26/11/2026",
+      "dataLimite": "10/01/2027",
+      "imagem": "",
+      "resumo": [
+        "Não prioriza a programação de ATV e DTV para feriados, executando os horários configurados para o dia da semana correspondente."
+      ]
+    },
+    {
+      "caso": "12345678",
+      "criticidade": "Muito Alta",
+      "dataAbertura": "26/11/2026",
       "dataLimite": "10/01/2027",
       "imagem": "",
       "resumo": [

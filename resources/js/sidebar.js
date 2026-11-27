@@ -15,7 +15,7 @@ $(function () {
   });
 
   // Scroll suave até a versão escolhida
-  $(document).on('click', 'a[href^="#Caso-"]', function (e) {
+  $(document).on('click', 'a[href^="#versao-"]', function (e) {
     e.preventDefault();
 
     var $link = $(this);
