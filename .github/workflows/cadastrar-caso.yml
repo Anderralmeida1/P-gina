@@ -44,7 +44,7 @@ on:
 
 # Serializa cadastros para evitar que dois formulários sobrescrevam a mesma atualização.
 concurrency:
-  group: cadastrar-caso
+  group: manipular-casos
   cancel-in-progress: false
 
 permissions:

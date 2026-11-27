@@ -1,0 +1,134 @@
+name: Excluir caso
+
+on:
+  # Exibe um formulário manual na aba Actions para excluir um registro identificado.
+  workflow_dispatch:
+    inputs:
+      categoria:
+        description: Arquivo de casos que contém o registro
+        required: true
+        type: choice
+        options:
+          - analises-defeito
+          - analises-sugestao
+          - analises-falha
+      caso:
+        description: Número do caso
+        required: true
+        type: string
+      criticidade:
+        description: Criticidade exata do registro
+        required: true
+        type: choice
+        options:
+          - Baixa
+          - Média
+          - Alta
+          - Muito Alta
+      data_abertura:
+        description: Data de abertura exata (DD/MM/AAAA)
+        required: true
+        type: string
+      data_limite:
+        description: Data limite exata (DD/MM/AAAA)
+        required: true
+        type: string
+
+# Evita que duas exclusões concorrentes substituam a mesma versão do arquivo.
+concurrency:
+  group: manipular-casos
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  excluir-caso:
+    # O GitHub só permite iniciar manualmente o workflow a usuários autorizados.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      # Confere todos os campos e exige correspondência única antes de remover o registro.
+      - name: Localizar e excluir o caso
+        env:
+          CATEGORIA: ${{ inputs.categoria }}
+          CASO: ${{ inputs.caso }}
+          CRITICIDADE: ${{ inputs.criticidade }}
+          DATA_ABERTURA: ${{ inputs.data_abertura }}
+          DATA_LIMITE: ${{ inputs.data_limite }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import sys
+          from datetime import datetime
+          from pathlib import Path
+
+          # A categoria é mapeada para nomes conhecidos; nenhum caminho vem diretamente do usuário.
+          arquivos = {
+              "analises-defeito": "analises-defeito.json",
+              "analises-sugestao": "analises-sugestao.json",
+              "analises-falha": "analises-falha.json",
+          }
+          categoria = os.environ["CATEGORIA"]
+          if categoria not in arquivos:
+              sys.exit("Categoria inválida.")
+
+          # Exige datas válidas e no formato DD/MM/AAAA para identificar o caso sem ambiguidades.
+          datas = {}
+          for campo in ("DATA_ABERTURA", "DATA_LIMITE"):
+              valor = os.environ[campo].strip()
+              if not re.fullmatch(r"\d{2}/\d{2}/\d{4}", valor):
+                  sys.exit(f"{campo} deve estar no formato DD/MM/AAAA.")
+              try:
+                  datas[campo] = datetime.strptime(valor, "%d/%m/%Y").strftime("%d/%m/%Y")
+              except ValueError:
+                  sys.exit(f"{campo} deve estar no formato DD/MM/AAAA.")
+
+          numero = os.environ["CASO"].strip()
+          criticidade = os.environ["CRITICIDADE"].strip()
+          if not numero:
+              sys.exit("Informe o número do caso.")
+          if criticidade not in {"Baixa", "Média", "Alta", "Muito Alta"}:
+              sys.exit("Criticidade inválida.")
+
+          # Carrega o arquivo escolhido e verifica todos os dados identificadores.
+          caminho = Path("resources/data") / arquivos[categoria]
+          with caminho.open(encoding="utf-8") as arquivo:
+              dados = json.load(arquivo)
+          casos = dados.get("casos")
+          if not isinstance(casos, list):
+              sys.exit(f"O arquivo {caminho} não contém uma lista de casos válida.")
+
+          correspondencias = [
+              indice for indice, registro in enumerate(casos)
+              if str(registro.get("caso", "")).strip() == numero
+              and registro.get("criticidade") == criticidade
+              and registro.get("dataAbertura") == datas["DATA_ABERTURA"]
+              and registro.get("dataLimite") == datas["DATA_LIMITE"]
+          ]
+          if not correspondencias:
+              sys.exit("Nenhum caso corresponde exatamente aos dados informados; nada foi excluído.")
+          if len(correspondencias) > 1:
+              sys.exit("Há mais de um caso com esses dados. A exclusão foi cancelada para evitar erro.")
+
+          removido = casos.pop(correspondencias[0])
+          dados["atualizadoEm"] = datetime.now().strftime("%d/%m/%Y")
+          with caminho.open("w", encoding="utf-8", newline="\n") as arquivo:
+              json.dump(dados, arquivo, ensure_ascii=False, indent=2)
+              arquivo.write("\n")
+
+          print(f"Caso {removido.get('caso')} excluído de {caminho}.")
+          PY
+
+      # Envia a remoção ao repositório usando o token temporário do GitHub Actions.
+      - name: Salvar no GitHub
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add resources/data/analises-defeito.json resources/data/analises-sugestao.json resources/data/analises-falha.json
+          git commit -m "Excluir caso via formulário"
+          git push
