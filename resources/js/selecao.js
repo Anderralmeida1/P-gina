@@ -1,6 +1,12 @@
-/* Tela de seleção: lê resources/data/modelos.json e monta os cartões de modelos. */
+/*
+ * Tela de seleção de modelos.
+ * Lê resources/data/modelos.json e usa cada modelo.nome e seu primeiro
+ * documento (documentos[0]) para preencher a interface e criar os links.
+ */
+// Caminho do catálogo JSON que alimenta a página de seleção.
 var MODELOS_URL = 'resources/data/modelos.json';
 
+// Carrega o catálogo quando a página estiver pronta e apresenta erro se falhar.
 $(function () {
   $.getJSON(MODELOS_URL)
     .done(function (data) {
@@ -19,6 +25,11 @@ $(function () {
     });
 });
 
+/**
+ * Preenche o seletor com o nome de cada modelo e o identificador do documento.
+ * Modelos sem documentos não podem ser selecionados e são ignorados.
+ * @param {Array<Object>} modelos Modelos lidos do catálogo.
+ */
 function montarSelect(modelos) {
   var $sel = $('#selectModelo').empty().prop('disabled', false);
   $sel.append($('<option>', { value: '', text: 'Selecione o modelo da central…' }));
@@ -37,22 +48,29 @@ function montarSelect(modelos) {
   });
 }
 
+/** Ativa os eventos de seleção e envio do formulário de modelos. */
 function bindForm() {
+  // O botão só pode ser usado depois que um modelo for escolhido.
   $('#selectModelo').on('change', function () {
     $('#btnAbrir').prop('disabled', !$(this).val());
   });
 
+  // Abre a página de detalhes do documento selecionado.
   $('#formModelo').on('submit', function (e) {
     e.preventDefault();
     var m = $('#selectModelo').val();
 
     if (m) {
-      window.location.href = 'changelog.html?modelo=' + encodeURIComponent(m);
+      window.location.href = 'painel.html?modelo=' + encodeURIComponent(m);
     }
   });
 }
 
-/* Cada card exibe apenas o título; toda a área do card funciona como link. */
+/**
+ * Cria um cartão clicável para cada modelo que tenha pelo menos um documento.
+ * O link ocupa todo o cartão por meio da classe stretched-link do framework.
+ * @param {Array<Object>} modelos Modelos que serão apresentados.
+ */
 function montarCartoes(modelos) {
   var $lista = $('#listaModelos').empty();
 
@@ -63,7 +81,7 @@ function montarCartoes(modelos) {
       return;
     }
 
-    var url = 'changelog.html?modelo=' + encodeURIComponent(documento.arquivo);
+    var url = 'painel.html?modelo=' + encodeURIComponent(documento.arquivo);
 
     var $card = $('<div class="card cartao-modelo h-100 position-relative">')
       .css('cursor', 'pointer');

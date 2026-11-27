@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <!-- Metadados básicos para idioma, responsividade, título e identificação da página. -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Casos em aberto para tratativa pela equipe do PeD">
   <meta name="author" content="Intelbras">
   <title>Painel PV</title>
 
+  <!-- Ícone exibido na aba do navegador. -->
   <link rel="shortcut icon" href="resources/img/fav.png">
 
+  <!-- Bibliotecas e fontes externas usadas pela interface. -->
   <!-- MDB UI Kit CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.css">
   <!-- Font Awesome 5.15.3 -->
@@ -23,12 +26,15 @@
   <!-- MDB UI Kit JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
 
+  <!-- Estilos da biblioteca e estilos próprios do projeto. -->
   <link rel="stylesheet" href="resources/css/app.css">
   <link rel="stylesheet" href="resources/css/style.css">
 </head>
 <body>
+  <!-- Layout de duas áreas: navegação lateral e conteúdo principal. -->
   <div class="wrapper">
 
+    <!-- Sidebar com retorno, contador, lista de casos e links de navegação. -->
     <nav id="sidebar" class="sidebar text-dark">
       <div class="sidebar-content js-simplebar">
         <a class="sidebar-brand text-center" href="#content">
@@ -56,6 +62,7 @@
     </nav>
 
     <div class="main">
+      <!-- Barra fixa superior com o controle de abrir/fechar a sidebar. -->
       <nav class="navbar navbar-expand navbar-light navbar-bg sticky-top">
         <a id="hamburger" class="sidebar-toggle d-flex" href="#" role="button" aria-label="Alternar menu">
           <i class="hamburger align-self-center"></i>
@@ -65,11 +72,13 @@
       <main id="content" class="content">
         <div class="container col-9" id="manualContent">
 
+          <!-- O cabeçalho é preenchido com os dados do JSON por adcasos.js. -->
           <header class="changelog-header text-center">
             <h2 id="headerTitulo">Atualização de firmware</h2>
             <h3 id="headerProduto"></h3>
             <h6 id="headerData" class="text-muted"></h6>
           </header>
+          <!-- Cartões de casos/versões são inseridos aqui dinamicamente. -->
           <section id="changelogContent"></section>
 
         </div>
@@ -78,7 +87,8 @@
 
   </div>
 
+  <!-- Comportamentos da navegação e carregamento/renderização dos dados. -->
   <script src="resources/js/sidebar.js"></script>
-  <script src="resources/js/changelog.js"></script>
+  <script src="resources/js/adcasos.js"></script>
 </body>
 </html>

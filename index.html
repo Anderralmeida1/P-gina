@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <!-- Metadados básicos para idioma, responsividade, título e identificação da página. -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Changelog das centrais de alarme Intelbras: escolha o modelo da central">
   <meta name="author" content="Intelbras">
   <title>Painel PV</title>
 
+  <!-- Ícone exibido na aba do navegador. -->
   <link rel="shortcut icon" href="resources/img/fav.png">
 
+  <!-- Bibliotecas e fontes externas usadas pela interface. -->
   <!-- MDB UI Kit CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.css">
   <!-- Font Awesome 5.15.3 -->
@@ -23,10 +26,12 @@
   <!-- MDB UI Kit JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"></script>
 
+  <!-- Estilos da biblioteca e estilos próprios do projeto. -->
   <link rel="stylesheet" href="resources/css/app.css">
   <link rel="stylesheet" href="resources/css/style.css">
 </head>
 <body class="pagina-selecao">
+  <!-- Conteúdo principal da tela de seleção de modelos. -->
   <main class="content selecao">
     <div class="container">
 
@@ -37,11 +42,13 @@
 
       <div class="line"></div>
 
+      <!-- Cartões de modelos inseridos pelo script resources/js/selecao.js. -->
       <div id="listaModelos" class="row row-cols-1 row-cols-md-1 row-cols-xl-1 g-3"></div>
 
     </div>
   </main>
 
+  <!-- Carrega os modelos e monta os cartões da página. -->
   <script src="resources/js/selecao.js"></script>
 </body>
 </html>

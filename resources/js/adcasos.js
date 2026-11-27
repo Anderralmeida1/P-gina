@@ -1,13 +1,23 @@
-/* Changelog: carrega o JSON do modelo escolhido, monta cabeçalho, sidebar e lista de versões,
-   e filtra em tempo real.
-
-   O modelo vem da URL:  changelog.html?modelo=amt-8000-pro
-   -> lê  resources/data/amt-8000-pro.json                                              */
+/*
+ * Página de casos e changelog.
+ *
+ * Lê o modelo do parâmetro `modelo` da URL e carrega o arquivo correspondente
+ * em resources/data. Os arquivos podem fornecer registros em `casos` (casos
+ * Salesforce) ou `versoes` (changelog tradicional). Os campos comuns usados
+ * pelos casos incluem caso, criticidade, dataAbertura, dataLimite e resumo.
+ *
+ * Exemplo: painel.html?modelo=analises-defeito
+ */
+// Arquivo de catálogo que relaciona modelos a documentos associados.
 var MODELOS_URL = 'resources/data/modelos.json';
+// Identificador validado recebido na URL.
 var MODELO = modeloDaUrl();
+// Caminho do JSON de dados do modelo selecionado.
 var CHANGELOG_URL = 'resources/data/' + MODELO + '.json';
+// Dados carregados; reutilizados pela busca e pela navegação da sidebar.
 var changelogData = null;
 
+// Aguarda a página estar pronta antes de validar a URL e solicitar os dados.
 $(document).ready(function () {
   if (!MODELO) {
     window.location.replace('index.html');   // sem modelo: volta para a seleção
@@ -16,17 +26,25 @@ $(document).ready(function () {
   carregarChangelog();
 });
 
-/* Aceita apenas letras minúsculas, números e hífen (o nome do arquivo .json) */
+/**
+ * Lê e valida o parâmetro de modelo para evitar nomes de arquivo inesperados.
+ * @returns {string} Slug válido ou string vazia quando o parâmetro é inválido.
+ */
 function modeloDaUrl() {
   var m = new URLSearchParams(window.location.search).get('modelo') || '';
   m = m.toLowerCase().trim();
   return /^[a-z0-9-]+$/.test(m) ? m : '';
 }
 
+/**
+ * Carrega os dados do modelo e inicia a renderização da página.
+ * Em caso de falha, apresenta uma mensagem orientando sobre o arquivo e o servidor.
+ */
 function carregarChangelog() {
   $.getJSON(CHANGELOG_URL)
     .done(function (data) {
       changelogData = data;
+      // Aceita tanto o formato de casos quanto o formato antigo de versões.
       var registros = data.casos || data.versoes || [];
       atribuirIds(registros);
       renderCabecalho(data);
@@ -45,7 +63,10 @@ function carregarChangelog() {
     });
 }
 
-/* ---------------------------------------------------------------- cabeçalho */
+/**
+ * Preenche o título do produto, a data de atualização e o título da guia.
+ * @param {Object} data Dados gerais do arquivo JSON do modelo.
+ */
 function renderCabecalho(data) {
   $('#headerTitulo').text(' ');
   $('#headerProduto').text(data.produto || '');
@@ -53,7 +74,10 @@ function renderCabecalho(data) {
   document.title = 'Painel PV';
 }
 
-/* ------------------------------------------------------------------ sidebar */
+/**
+ * Cria os links dos casos/versões e atualiza o contador da sidebar.
+ * @param {Array<Object>} versoes Registros já preparados com identificadores.
+ */
 function renderSidebar(versoes) {
   var $ul = $('#sidebarVersions').empty();
   $('#contadorCasos').text(versoes.length);
@@ -70,7 +94,10 @@ function renderSidebar(versoes) {
   );
 }
 
-/* Outros documentos do mesmo modelo (ex.: CPU Principal / CPU ETH-GPRS) */
+/**
+ * Exibe links para outros documentos cadastrados para o mesmo modelo.
+ * Não altera a sidebar se o modelo não possuir documentos relacionados.
+ */
 function renderDocumentosDoModelo() {
   $.getJSON(MODELOS_URL).done(function (data) {
     var modelo = (data.modelos || []).filter(function (m) {
@@ -81,7 +108,7 @@ function renderDocumentosDoModelo() {
     var $ul = $('#sidebarDocumentos').empty();
     modelo.documentos.forEach(function (d) {
       var $a = $('<a>', { 'class': 'sidebar-link' + (d.arquivo === MODELO ? ' active' : ''),
-                          href: 'changelog.html?modelo=' + d.arquivo });
+                          href: 'painel.html?modelo=' + d.arquivo });
       $a.append('<i class="fas fa-file-alt me-2"></i>').append(document.createTextNode(d.rotulo));
       $ul.append($('<li>').append($a));
     });
@@ -89,7 +116,10 @@ function renderDocumentosDoModelo() {
   });
 }
 
-/* ----------------------------------------------------------------- conteúdo */
+/**
+ * Renderiza todos os casos/versões em ordem cronológica decrescente.
+ * @param {Array<Object>} versoes Registros a serem exibidos.
+ */
 function renderVersoes(versoes) {
   var $c = $('#changelogContent').empty();
 
@@ -128,6 +158,13 @@ function renderVersoes(versoes) {
   });
 }
 
+/**
+ * Informa se a data limite está a até 15 dias da data de atualização.
+ * Datas vencidas também retornam true; datas inválidas não recebem destaque.
+ * @param {string} dataLimite Data limite no formato DD/MM/AAAA.
+ * @param {string} dataAtualizacao Data de atualização no formato DD/MM/AAAA.
+ * @returns {boolean} Se o prazo deve receber destaque visual.
+ */
 function dataLimiteEmAte15Dias(dataLimite, dataAtualizacao) {
   var limite = parseData(dataLimite);
   var atualizacao = parseData(dataAtualizacao);
@@ -147,6 +184,11 @@ function dataLimiteEmAte15Dias(dataLimite, dataAtualizacao) {
   return diasRestantes <= 15;
 }
 
+/**
+ * Converte a criticidade em uma classe CSS, ignorando diferenças de acentuação.
+ * @param {string} criticidade Nível de criticidade informado no JSON.
+ * @returns {string} Classe de cor correspondente ou string vazia.
+ */
 function classeDaCriticidade(criticidade) {
   var valor = String(criticidade || '')
     .toLowerCase()
@@ -162,8 +204,12 @@ function classeDaCriticidade(criticidade) {
   }
 }
 
-/* Cada item de "alteracoes" pode ser uma string ou, opcionalmente, um objeto
-   { "texto": "...", "subitens": [...], "obs": "...", "nota": "..." } */
+/**
+ * Converte uma lista de resumo/alterações em HTML, inclusive listas aninhadas.
+ * Itens podem ser strings ou objetos com texto, subitens, obs e nota.
+ * @param {Array<string|Object>} itens Itens a exibir.
+ * @returns {string} HTML da lista ou string vazia se não houver itens.
+ */
 function renderLista(itens) {
   if (!itens || !itens.length) { return ''; }
   var h = '<ul>';
@@ -179,13 +225,17 @@ function renderLista(itens) {
   return h + '</ul>';
 }
 
-/* ------------------------------------------------------------------- busca */
+/** Conecta o campo de busca ao filtro acionado a cada alteração de texto. */
 function bindBusca() {
   $('#buscaInput').on('input', function () {
     filtrarVersoes($(this).val().toLowerCase().trim());
   });
 }
 
+/**
+ * Filtra os registros pesquisando nos campos principais e textos aninhados.
+ * @param {string} termo Texto digitado pelo usuário.
+ */
 function filtrarVersoes(termo) {
   var versoes = (changelogData && (changelogData.casos || changelogData.versoes)) || [];
 
@@ -212,7 +262,7 @@ function filtrarVersoes(termo) {
   renderVersoes(filtradas);   // o sidebar NÃO é filtrado
 }
 
-/* Clique no sidebar numa versão que o filtro escondeu: limpa a busca e rola até ela */
+// Se a busca escondeu o destino escolhido na sidebar, restaura os registros antes de navegar.
 $(document).on('click', '#sidebarVersions a[href^="#versao-"]', function () {
   var id = $(this).attr('href').substring(1);
   if ($('#' + id).length || !changelogData) { return; }
@@ -221,24 +271,28 @@ $(document).on('click', '#sidebarVersions a[href^="#versao-"]', function () {
   $(this).trigger('click');
 });
 
-/* ---------------------------------------------------------------- utilitários */
+/** Converte uma data DD/MM/AAAA em Date local para ordenação e comparação. */
 function parseData(str) {
   var p = String(str).split('/');
   return new Date(p[2], p[1] - 1, p[0]);
 }
 
+/** Retorna uma cópia dos registros ordenada do mais recente para o mais antigo. */
 function ordenarVersoes(versoes) {
   return versoes.slice().sort(function (a, b) {
     return parseData(b.dataAbertura || b.data) - parseData(a.dataAbertura || a.data);
   });
 }
 
-/* Id da versão para o HTML/âncoras (só letras, números e hífen) */
+/** Gera um fragmento seguro para usar como ID HTML ou âncora. */
 function slug(versao) {
   return String(versao).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'v';
 }
 
-/* Dá a cada versão um id único (se a mesma versão aparecer 2x, o 2º vira "-2", etc.) */
+/**
+ * Atribui IDs únicos aos registros, acrescentando sufixos em caso de duplicidade.
+ * @param {Array<Object>} versoes Registros que receberão a propriedade _id.
+ */
 function atribuirIds(versoes) {
   var usados = {};
   ordenarVersoes(versoes).forEach(function (v) {
@@ -248,11 +302,14 @@ function atribuirIds(versoes) {
   });
 }
 
+/** Escapa texto antes de inseri-lo em uma string HTML. */
 function esc(s) {
   return $('<div>').text(s == null ? '' : String(s)).html();
 }
 
-/* Formatação opcional nos textos: **negrito**  *itálico*  !!vermelho!!   (\n = quebra de linha) */
+/**
+ * Escapa o texto e aplica a sintaxe simples de negrito, itálico, vermelho e quebra de linha.
+ */
 function fmt(s) {
   return esc(s)
     .replace(/!!(.+?)!!/g, '<strong class="text-danger">$1</strong>')
@@ -261,10 +318,12 @@ function fmt(s) {
     .replace(/\n/g, '<br>');
 }
 
+/** Remove acentos e converte texto para facilitar buscas sem distinção de caixa. */
 function normalizar(s) {
   return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 
+/** Extrai textos de itens e subitens para que todos possam ser pesquisados. */
 function textosDe(itens) {
   var out = [];
   (itens || []).forEach(function (it) {

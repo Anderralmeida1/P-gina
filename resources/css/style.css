@@ -1,6 +1,7 @@
 /* Estilos próprios do Changelog (AMT 2018 E Smart) */
 
 body {
+  /* Fonte e cores base compartilhadas por todas as páginas. */
   font-family: 'Nunito Sans', sans-serif;
   color: #333;
   background: #fff;
@@ -47,6 +48,7 @@ body {
   display: block;
 }
 .sidebar-heading-count {
+  /* Mantém o contador alinhado ao título da seção da sidebar. */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -172,6 +174,7 @@ body {
   background: #06cb3f;
 }
 .caso-titulo {
+  /* Separa o identificador do caso da criticidade, que fica à direita. */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -180,6 +183,7 @@ body {
   margin-left: auto;
 }
 .caso-periodo {
+  /* Apresenta abertura à esquerda e data limite à direita na mesma linha. */
   display: flex;
   justify-content: space-between;
   gap: 1rem;
@@ -188,6 +192,7 @@ body {
   margin-bottom: 0.75rem;
 }
 .caso-periodo .data-limite-proxima {
+  /* Destaque de prazo aplicado pelo JavaScript quando restam até 15 dias. */
   color: #dc3545 !important;
 }
 .versao-corpo {
@@ -198,6 +203,7 @@ body {
   color: #1f2d24;
 }
 .caso-resumo-titulo {
+  /* Identifica visualmente o título da lista de resumo. */
   font-weight: 700;
   color: #1f2d24;
 }
@@ -228,6 +234,7 @@ body {
   color: #05a534;
 }
 .versao-titulo .criticidade-baixa {
+  /* Cores das letras para cada nível; o fundo do badge permanece branco. */
   color: #198754;
 }
 .versao-titulo .criticidade-media {
