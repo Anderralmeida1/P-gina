@@ -1,0 +1,145 @@
+name: Cadastrar caso
+
+on:
+  # Exibe um formulário de cadastro na aba Actions do GitHub.
+  workflow_dispatch:
+    inputs:
+      categoria:
+        description: Arquivo de casos que receberá o registro
+        required: true
+        type: choice
+        options:
+          - analises-defeito
+          - analises-sugestao
+          - analises-falha
+      caso:
+        description: Número identificador do caso
+        required: true
+        type: string
+      criticidade:
+        description: Nível de criticidade
+        required: true
+        type: choice
+        options:
+          - Baixa
+          - Média
+          - Alta
+          - Muito Alta
+      data_abertura:
+        description: Data de abertura no formato DD/MM/AAAA
+        required: true
+        type: string
+      data_limite:
+        description: Data limite no formato DD/MM/AAAA
+        required: true
+        type: string
+      imagem:
+        description: Caminho ou URL da imagem (opcional)
+        required: false
+        type: string
+      resumo:
+        description: Resumo do caso; cada linha será um item
+        required: true
+        type: string
+
+# Serializa cadastros para evitar que dois formulários sobrescrevam a mesma atualização.
+concurrency:
+  group: cadastrar-caso
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  salvar-caso:
+    # O formulário só pode ser iniciado por alguém com acesso ao repositório.
+    runs-on: ubuntu-latest
+    steps:
+      # Obtém o conteúdo atual para adicionar o caso ao arquivo JSON correto.
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      # Passa os campos como variáveis de ambiente para evitar inserir dados no código shell.
+      - name: Validar e atualizar o JSON
+        env:
+          CATEGORIA: ${{ inputs.categoria }}
+          CASO: ${{ inputs.caso }}
+          CRITICIDADE: ${{ inputs.criticidade }}
+          DATA_ABERTURA: ${{ inputs.data_abertura }}
+          DATA_LIMITE: ${{ inputs.data_limite }}
+          IMAGEM: ${{ inputs.imagem }}
+          RESUMO: ${{ inputs.resumo }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import sys
+          from datetime import datetime
+          from pathlib import Path
+
+          # Mapeia as opções do formulário para nomes de arquivos permitidos.
+          arquivos = {
+              "analises-defeito": "analises-defeito.json",
+              "analises-sugestao": "analises-sugestao.json",
+              "analises-falha": "analises-falha.json",
+          }
+          categoria = os.environ["CATEGORIA"]
+          if categoria not in arquivos:
+              sys.exit("Categoria inválida.")
+
+          # Valida datas e mantém o formato utilizado pelos dados do projeto.
+          datas = {}
+          for campo in ("DATA_ABERTURA", "DATA_LIMITE"):
+              valor = os.environ[campo].strip()
+              if not re.fullmatch(r"\d{2}/\d{2}/\d{4}", valor):
+                  sys.exit(f"{campo} deve estar no formato DD/MM/AAAA.")
+              try:
+                  datas[campo] = datetime.strptime(valor, "%d/%m/%Y").strftime("%d/%m/%Y")
+              except ValueError:
+                  sys.exit(f"{campo} deve estar no formato DD/MM/AAAA.")
+
+          numero = os.environ["CASO"].strip()
+          criticidade = os.environ["CRITICIDADE"].strip()
+          if criticidade not in {"Baixa", "Média", "Alta", "Muito Alta"}:
+              sys.exit("Criticidade inválida.")
+          resumos = [linha.strip() for linha in os.environ["RESUMO"].splitlines() if linha.strip()]
+          if not numero or not resumos:
+              sys.exit("Informe o número do caso e pelo menos uma linha de resumo.")
+
+          # Carrega o JSON existente e impede duplicar o mesmo número de caso.
+          caminho = Path("resources/data") / arquivos[categoria]
+          with caminho.open(encoding="utf-8") as arquivo:
+              dados = json.load(arquivo)
+
+          casos = dados.setdefault("casos", [])
+          if any(str(registro.get("caso", "")).strip() == numero for registro in casos):
+              sys.exit(f"O caso {numero} já está cadastrado em {caminho}.")
+
+          # Monta o registro seguindo a estrutura já usada pelos arquivos de análise.
+          casos.append({
+              "caso": numero,
+              "criticidade": criticidade,
+              "dataAbertura": datas["DATA_ABERTURA"],
+              "dataLimite": datas["DATA_LIMITE"],
+              "imagem": os.environ["IMAGEM"].strip(),
+              "resumo": resumos,
+          })
+          dados["atualizadoEm"] = datetime.now().strftime("%d/%m/%Y")
+
+          # Grava o JSON preservando acentos e a indentação legível.
+          with caminho.open("w", encoding="utf-8", newline="\n") as arquivo:
+              json.dump(dados, arquivo, ensure_ascii=False, indent=2)
+              arquivo.write("\n")
+
+          print(f"Caso {numero} adicionado a {caminho}.")
+          PY
+
+      # Registra a atualização no repositório usando o token temporário do GitHub Actions.
+      - name: Salvar no GitHub
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add resources/data/analises-defeito.json resources/data/analises-sugestao.json resources/data/analises-falha.json
+          git commit -m "Cadastrar caso via formulário"
+          git push
