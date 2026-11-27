@@ -13,6 +13,17 @@
         "Informar os impactos observados no produto ou processo.",
         "Informar detalhes adicionais necessários para a análise."
       ]
+    },
+    {
+      "caso": "13041994",
+      "criticidade": "Muito Alta",
+      "dataAbertura": "01/10/2026",
+      "dataLimite": "31/12/2026",
+      "imagem": "",
+      "resumo": [
+        "Teste de preencher utilizando uma tela local, bem util para colocar os dados rodando de maneira simples.",
+        "Se pulo linha crio um novo item no resumo. muito bom."
+      ]
     }
   ]
 }

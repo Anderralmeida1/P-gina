@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- Metadados e título da tela local de cadastro. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel PV - Cadastro de caso</title>
+  <style>
+    /* Estilos locais: esta tela não depende de bibliotecas ou serviços externos. */
+    :root {
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: #1f2d24;
+      background: #f5f7f6;
+    }
+    body {
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: #fff;
+      border: 1px solid #e1e6e3;
+      border-radius: 0.75rem;
+      box-shadow: 0 0.5rem 1.5rem rgba(31, 45, 36, 0.08);
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 1.6rem;
+    }
+    .intro {
+      color: #58645c;
+      line-height: 1.5;
+    }
+    .delete-section {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e1e6e3;
+    }
+    .delete-section h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+    }
+    form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .field-wide {
+      grid-column: 1 / -1;
+    }
+    label {
+      font-weight: 650;
+    }
+    input,
+    select,
+    textarea {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 2.75rem;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid #bdc8c0;
+      border-radius: 0.4rem;
+      background: #fff;
+      color: inherit;
+      font: inherit;
+    }
+    textarea {
+      min-height: 7rem;
+      resize: vertical;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 3px solid rgba(6, 203, 63, 0.2);
+      border-color: #05a534;
+    }
+    .hint {
+      margin: 0;
+      color: #68746d;
+      font-size: 0.875rem;
+    }
+    button {
+      min-height: 2.8rem;
+      padding: 0.65rem 1rem;
+      border: 0;
+      border-radius: 0.4rem;
+      background: #06a533;
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:disabled {
+      cursor: wait;
+      opacity: 0.65;
+    }
+    #status {
+      min-height: 1.5rem;
+      align-self: center;
+      line-height: 1.4;
+    }
+    #status[data-type="success"] {
+      color: #087b2d;
+    }
+    #status[data-type="error"] {
+      color: #b42318;
+    }
+    .button-danger {
+      background: #b42318;
+    }
+    #delete-status {
+      min-height: 1.5rem;
+      margin: 0.75rem 0 0;
+      line-height: 1.4;
+    }
+    #delete-status[data-type="success"] {
+      color: #087b2d;
+    }
+    #delete-status[data-type="error"] {
+      color: #b42318;
+    }
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem 0.6rem;
+      }
+      main {
+        padding: 1.25rem;
+      }
+      form {
+        grid-template-columns: 1fr;
+      }
+      .field-wide {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Cadastrar caso</h1>
+    <p class="intro">
+      Preencha os dados abaixo. Ao salvar, o registro será adicionado ao JSON escolhido
+      dentro do projeto aberto no VS Code.
+    </p>
+
+    <!-- O formulário envia os dados ao servidor local iniciado pela tarefa do VS Code. -->
+    <form id="case-form">
+      <div class="field field-wide">
+        <label for="categoria">Categoria</label>
+        <select id="categoria" name="categoria" required>
+          <option value="">Selecione uma categoria</option>
+          <option value="analises-defeito">Análises de Defeito</option>
+          <option value="analises-sugestao">Análises de Sugestões</option>
+          <option value="analises-falha">Análises de Falhas no Processo</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="caso">Número do caso</label>
+        <input id="caso" name="caso" type="text" maxlength="100" required>
+      </div>
+
+      <div class="field">
+        <label for="criticidade">Criticidade</label>
+        <select id="criticidade" name="criticidade" required>
+          <option value="">Selecione</option>
+          <option>Baixa</option>
+          <option>Média</option>
+          <option>Alta</option>
+          <option>Muito Alta</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="data-abertura">Data de abertura</label>
+        <input id="data-abertura" name="dataAbertura" type="date" required>
+      </div>
+
+      <div class="field">
+        <label for="data-limite">Data limite</label>
+        <input id="data-limite" name="dataLimite" type="date" required>
+      </div>
+
+      <div class="field field-wide">
+        <label for="imagem">Imagem (opcional)</label>
+        <input id="imagem" name="imagem" type="text" maxlength="2048" placeholder="URL ou caminho da imagem">
+      </div>
+
+      <div class="field field-wide">
+        <label for="resumo">Resumo</label>
+        <textarea id="resumo" name="resumo" required
+          placeholder="Descreva o caso. Cada linha será exibida como um item separado."></textarea>
+        <p class="hint">Digite cada ponto do resumo em uma linha diferente.</p>
+      </div>
+
+      <button id="submit-button" type="submit">Salvar caso</button>
+      <div id="status" role="status" aria-live="polite"></div>
+    </form>
+
+    <!-- A exclusão usa a categoria, o registro escolhido e sua impressão atual para evitar alvos desatualizados. -->
+    <section class="delete-section" aria-labelledby="delete-title">
+      <h2 id="delete-title">Excluir caso cadastrado</h2>
+      <p class="intro">Selecione o arquivo e o registro. A exclusão é permanente no JSON deste projeto.</p>
+      <form id="delete-form">
+        <div class="field field-wide">
+          <label for="delete-category">Categoria</label>
+          <select id="delete-category" name="categoria" required>
+            <option value="">Selecione uma categoria</option>
+            <option value="analises-defeito">Análises de Defeito</option>
+            <option value="analises-sugestao">Análises de Sugestões</option>
+            <option value="analises-falha">Análises de Falhas no Processo</option>
+          </select>
+        </div>
+        <div class="field field-wide">
+          <label for="delete-record">Caso cadastrado</label>
+          <select id="delete-record" name="registro" required disabled>
+            <option value="">Selecione primeiro uma categoria</option>
+          </select>
+        </div>
+        <button id="delete-button" class="button-danger" type="submit" disabled>Excluir caso selecionado</button>
+      </form>
+      <p id="delete-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script>
+    // Converte a data ISO do navegador para o formato de texto esperado pelo servidor.
+    function toDateParts(value) {
+      return value ? value.split('-').map(Number) : [];
+    }
+
+    // Envia o formulário e apresenta o resultado sem recarregar a página.
+    document.getElementById('case-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const form = event.currentTarget;
+      const button = document.getElementById('submit-button');
+      const status = document.getElementById('status');
+      const formData = new FormData(form);
+      const abertura = toDateParts(formData.get('dataAbertura'));
+      const limite = toDateParts(formData.get('dataLimite'));
+      const payload = {
+        categoria: formData.get('categoria'),
+        caso: formData.get('caso'),
+        criticidade: formData.get('criticidade'),
+        dataAbertura: abertura.length ? `${abertura[0]}-${String(abertura[1]).padStart(2, '0')}-${String(abertura[2]).padStart(2, '0')}` : '',
+        dataLimite: limite.length ? `${limite[0]}-${String(limite[1]).padStart(2, '0')}-${String(limite[2]).padStart(2, '0')}` : '',
+        imagem: formData.get('imagem'),
+        resumo: String(formData.get('resumo') || '').split(/\r?\n/)
+      };
+
+      button.disabled = true;
+      status.dataset.type = '';
+      status.textContent = 'Salvando...';
+
+      try {
+        const response = await fetch('/api/casos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.error || 'Não foi possível salvar o caso.');
+        }
+
+        status.dataset.type = 'success';
+        status.textContent = `${result.message} A alteração está disponível no Source Control do VS Code.`;
+        form.reset();
+      } catch (error) {
+        status.dataset.type = 'error';
+        status.textContent = error.message || 'Falha ao conectar com o servidor local.';
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    // Consulta a lista atual da categoria e preenche o seletor de exclusão.
+    async function loadCasesForDeletion() {
+      const category = document.getElementById('delete-category').value;
+      const select = document.getElementById('delete-record');
+      const button = document.getElementById('delete-button');
+      const status = document.getElementById('delete-status');
+      select.replaceChildren(new Option(category ? 'Carregando casos...' : 'Selecione primeiro uma categoria', ''));
+      select.disabled = true;
+      button.disabled = true;
+      status.textContent = '';
+      status.dataset.type = '';
+      if (!category) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/casos?categoria=${encodeURIComponent(category)}`);
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.error || 'Não foi possível carregar os casos.');
+        }
+
+        select.replaceChildren(new Option(
+          result.cases.length ? 'Selecione um caso' : 'Não há casos cadastrados nesta categoria',
+          ''
+        ));
+        result.cases.forEach((record) => {
+          const option = new Option(record.label, String(record.index));
+          option.dataset.fingerprint = record.fingerprint;
+          select.add(option);
+        });
+        select.disabled = result.cases.length === 0;
+      } catch (error) {
+        select.replaceChildren(new Option('Falha ao carregar os casos', ''));
+        status.dataset.type = 'error';
+        status.textContent = error.message || 'Falha ao conectar com o servidor local.';
+      }
+    }
+
+    // Habilita exclusão somente depois que um registro válido estiver selecionado.
+    document.getElementById('delete-category').addEventListener('change', loadCasesForDeletion);
+    document.getElementById('delete-record').addEventListener('change', (event) => {
+      document.getElementById('delete-button').disabled = !event.currentTarget.value;
+    });
+
+    // Exige confirmação explícita antes de apagar o registro selecionado do JSON.
+    document.getElementById('delete-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const category = document.getElementById('delete-category').value;
+      const select = document.getElementById('delete-record');
+      const option = select.selectedOptions[0];
+      const status = document.getElementById('delete-status');
+      const button = document.getElementById('delete-button');
+      if (!option || !select.value || !window.confirm(`Excluir ${option.textContent}? Esta ação não pode ser desfeita.`)) {
+        return;
+      }
+
+      button.disabled = true;
+      status.dataset.type = '';
+      status.textContent = 'Excluindo...';
+
+      try {
+        const response = await fetch('/api/casos', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            categoria: category,
+            index: Number(select.value),
+            fingerprint: option.dataset.fingerprint
+          })
+        });
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.error || 'Não foi possível excluir o caso.');
+        }
+
+        const successMessage = result.message;
+        await loadCasesForDeletion();
+        status.dataset.type = 'success';
+        status.textContent = successMessage;
+      } catch (error) {
+        status.dataset.type = 'error';
+        status.textContent = error.message || 'Falha ao conectar com o servidor local.';
+      } finally {
+        button.disabled = !select.value;
+      }
+    });
+  </script>
+</body>
+</html>
