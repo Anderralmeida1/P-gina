@@ -3,23 +3,179 @@
   "atualizadoEm": "27/11/2026",
   "casos": [
     {
+      "caso": "06897829",
+      "assunto": "Guardian Android + Alarmes - Não recebe notificação com bloqueio de envio de partição 0 ativo",
+      "linhaProduto": "Guardian",
+      "criticidade": "Média",
+      "dataAbertura": "09/09/2026",
+      "dataLimite": "18/12/2026",
+      "resumo": [
+        "Não recebe notificação com bloqueio de envio de partição 0 ativo"
+      ]
+    },
+    {
       "caso": "06901470",
+      "assunto": "Guardian IOS + Alarmes - Não recebe notificação com bloqueio de envio de partição 0 ativo",
       "linhaProduto": "Guardian",
       "criticidade": "Média",
       "dataAbertura": "10/09/2026",
       "dataLimite": "19/12/2026",
       "resumo": [
-        "Guardian IOS + Alarmes - Não recebe notificação com bloqueio de envio de partição 0 ativo"
+        "Não recebe notificação com bloqueio de envio de partição 0 ativo"
       ]
     },
     {
-      "caso": "06897829",
+      "caso": "06914556",
+      "assunto": "Guardian IOS + Alarmes - Não entrega evento de porta aberta para o Guardian com o sensor particionado",
       "linhaProduto": "Guardian",
       "criticidade": "Média",
-      "dataAbertura": "09/09/2026",
-      "dataLimite": "11/12/2026",
+      "dataAbertura": "14/09/2026",
+      "dataLimite": "23/12/2026",
       "resumo": [
-        "Não recebe notificação com bloqueio de envio de partição 0 ativo"
+        "Não entrega evento de porta aberta para o Guardian com o sensor particionado"
+      ]
+    },
+    {
+      "caso": "06923344",
+      "assunto": "AMT Remoto Mobile (Android) - Não possui os campos de partição do teclado",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "16/09/2026",
+      "dataLimite": "25/12/2026",
+      "resumo": [
+        "Não possui os campos de partição do teclado"
+      ]
+    },
+    {
+      "caso": "06923453",
+      "assunto": "AMT Remoto Mobile (IOS) - Não possui os campos de partição do teclado",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "16/09/2026",
+      "dataLimite": "25/12/2026",
+      "resumo": [
+        "Não possui os campos de partição do teclado"
+      ]
+    },
+    {
+      "caso": "06946623",
+      "assunto": "AMT 8000 PRO - Utilizando IVA 8040 é possível configurar a zona como NA via teclado",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "23/09/2026",
+      "dataLimite": "01/01/2027",
+      "resumo": [
+        "Utilizando IVA 8040 é possível configurar a zona como NA via teclado"
+      ]
+    },
+    {
+      "caso": "06950379",
+      "assunto": "AMT 8000 LITE - Utilizando IVA 8040 é possível configurar a zona como NA via teclado",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "24/09/2026",
+      "dataLimite": "02/01/2027",
+      "resumo": [
+        "Utilizando IVA 8040 é possível configurar a zona como NA via teclado"
+      ]
+    },
+    {
+      "caso": "06951338",
+      "assunto": "AMT 8000 - Utilizando IVA 8040 é possível configurar a zona como NA via teclado",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "24/09/2026",
+      "dataLimite": "02/01/2027",
+      "resumo": [
+        "Utilizando IVA 8040 é possível configurar a zona como NA via teclado"
+      ]
+    },
+    {
+      "caso": "06964690",
+      "assunto": "AMT Remoto Mobile (Android) - APP enviando bkp incorreto de dispositivos sem fio",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "29/09/2026",
+      "dataLimite": "07/01/2027",
+      "resumo": [
+        "APP enviando bkp incorreto de dispositivos sem fio"
+      ]
+    },
+    {
+      "caso": "06964954",
+      "assunto": "AMT Remoto Mobile (Android) - APP bloqueando leitura dos controles remotos pelo Amt remoto desktop",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "29/09/2026",
+      "dataLimite": "07/01/2027",
+      "resumo": [
+        "APP bloqueando leitura dos controles remotos pelo Amt remoto desktop"
+      ]
+    },
+    {
+      "caso": "06967006",
+      "assunto": "AMT Remoto Mobile (IOS) - APP enviando bkp incorreto de dispositivos sem fio",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "29/09/2026",
+      "dataLimite": "07/01/2026",
+      "resumo": [
+        "APP enviando bkp incorreto de dispositivos sem fio"
+      ]
+    },
+    {
+      "caso": "06967043",
+      "assunto": "APP bloqueando leitura dos controles remotos pelo Amt remoto desktop",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "29/09/2026",
+      "dataLimite": "07/07/2027",
+      "resumo": [
+        "APP bloqueando leitura dos controles remotos pelo Amt remoto desktop"
+      ]
+    },
+    {
+      "caso": "06976412",
+      "assunto": "AMT Remoto Mobile (Android) - Não permite atualizar linha SMART abaixo da versão 6.8 com o GPRS habilitado.",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "01/10/2026",
+      "dataLimite": "09/01/2027",
+      "resumo": [
+        "Não permite atualizar linha SMART abaixo da versão 6.8 com o GPRS habilitado."
+      ]
+    },
+    {
+      "caso": "06976137",
+      "assunto": "AMT Remoto Mobile (IOS) - Não permite atualizar linha SMART abaixo da versão 6.8 com o GPRS habilitado.",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "01/10/2026",
+      "dataLimite": "09/01/2027",
+      "resumo": [
+        "Não permite atualizar linha SMART abaixo da versão 6.8 com o GPRS habilitado."
+      ]
+    },
+    {
+      "caso": "06977022",
+      "assunto": "Guardian Android + Alarmes - Notificação não chega com horário correto utilizando fuso horário.",
+      "linhaProduto": "Guardian",
+      "criticidade": "Média",
+      "dataAbertura": "01/10/2026",
+      "dataLimite": "09/01/2027",
+      "resumo": [
+        "Notificação não chega com horário correto utilizando fuso horário."
+      ]
+    },
+    {
+      "caso": "06977200",
+      "assunto": "Guardian IOS + Alarmes - Notificação não chega com horário correto utilizando fuso horário.",
+      "linhaProduto": "Guardian",
+      "criticidade": "Média",
+      "dataAbertura": "01/10/2026",
+      "dataLimite": "09/01/2027",
+      "resumo": [
+        "Notificação não chega com horário correto utilizando fuso horário."
       ]
     }
   ]
