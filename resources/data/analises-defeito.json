@@ -3,23 +3,23 @@
   "atualizadoEm": "27/11/2026",
   "casos": [
     {
-      "caso": "06897829",
-      "criticidade": "Média",
-      "dataAbertura": "09/09/2026",
-      "dataLimite": "18/12/2026",
-      "imagem": "Guardian Android + Alarmes - Não recebe notificação com bloqueio de envio de partição 0 ativo",
-      "resumo": [
-        "Guardian Android + Alarmes - Não recebe notificação com bloqueio de envio de partição 0 ativo"
-      ]
-    },
-    {
       "caso": "06901470",
+      "linhaProduto": "Guardian",
       "criticidade": "Média",
       "dataAbertura": "10/09/2026",
       "dataLimite": "19/12/2026",
-      "imagem": "",
       "resumo": [
         "Guardian IOS + Alarmes - Não recebe notificação com bloqueio de envio de partição 0 ativo"
+      ]
+    },
+    {
+      "caso": "06897829",
+      "linhaProduto": "Guardian",
+      "criticidade": "Média",
+      "dataAbertura": "09/09/2026",
+      "dataLimite": "11/12/2026",
+      "resumo": [
+        "Não recebe notificação com bloqueio de envio de partição 0 ativo"
       ]
     }
   ]

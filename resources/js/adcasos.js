@@ -101,7 +101,20 @@ function renderSidebar(versoes) {
 function filtrarPorLinhaProduto(versoes) {
   if (!linhasProdutoSelecionadas.length) { return versoes; }
   return versoes.filter(function (versao) {
-    return linhasProdutoSelecionadas.indexOf(versao.linhaProduto) !== -1;
+    var linhas = linhasDeProdutoDoRegistro(versao);
+    // Mantém casos sem linha identificada visíveis para que o aviso seja percebido.
+    if (!linhas.length) { return true; }
+    return linhasProdutoSelecionadas.some(function (linha) {
+      return linhas.indexOf(linha) !== -1;
+    });
+  });
+}
+
+/** Retorna somente as linhas de produto reconhecidas no registro. */
+function linhasDeProdutoDoRegistro(versao) {
+  var linhas = Array.isArray(versao.linhaProduto) ? versao.linhaProduto : [versao.linhaProduto];
+  return linhas.filter(function (linha) {
+    return LINHAS_PRODUTO.indexOf(linha) !== -1;
   });
 }
 
@@ -142,6 +155,7 @@ function renderVersoes(versoes) {
   ordenarVersoes(versoes).forEach(function (v) {
     var id = v._id;
     var classeCriticidade = classeDaCriticidade(v.criticidade);
+    var produtoDefinido = linhasDeProdutoDoRegistro(v).length > 0;
     var classeDataLimite = dataLimiteEmAte15Dias(
       v.dataLimite,
       changelogData && changelogData.atualizadoEm
@@ -159,6 +173,9 @@ function renderVersoes(versoes) {
           '</span>' +
         '</h2>' +
         '<div class="versao-corpo">' +
+          (!produtoDefinido
+            ? '<div class="alert alert-warning">O produto do registro não está definido.</div>'
+            : '') +
             '<div class="caso-periodo">' +
               '<p class="text-muted"><i>Data de Abertura: ' + esc(v.dataAbertura || '') + '</i></p>' +
               '<p class="text-muted' + classeDataLimite + '"><i>Data Limite: ' + esc(v.dataLimite || '') + '</i></p>' +

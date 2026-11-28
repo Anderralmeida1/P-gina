@@ -117,12 +117,13 @@ uma lista `casos`. Os registros usam esta estrutura:
 ```
 
 `assunto` é obrigatório e aparece abaixo do número do caso na faixa verde.
-`linhaProduto` aceita `Alarmes`, `Sensores` ou `Guardian`. No painel, os filtros
-são botões flutuantes: os selecionados ficam verdes e podem ser combinados para
-exibir os casos de qualquer uma das linhas escolhidas. Ao desativar todos os
-botões, todos os casos voltam a ser exibidos. As datas dos arquivos são
-armazenadas no formato `DD/MM/AAAA`. O catálogo de modelos deve apontar para o
-nome do arquivo sem a extensão `.json`.
+`linhaProduto` aceita `Alarmes`, `Sensores` ou `Guardian`. Se estiver vazia ou
+ausente, o caso permanece visível com um aviso de produto não definido. No
+painel, os filtros são botões flutuantes: os selecionados ficam verdes e podem
+ser combinados para exibir os casos de qualquer uma das linhas escolhidas. Ao
+desativar todos os botões, todos os casos voltam a ser exibidos. As datas dos
+arquivos são armazenadas no formato `DD/MM/AAAA`. O catálogo de modelos deve
+apontar para o nome do arquivo sem a extensão `.json`.
 
 ## Verificações antes de enviar alterações
 
