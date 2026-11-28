@@ -12,6 +12,105 @@
       "resumo": [
         "Criar opção de renomear PGM via softwares"
       ]
+    },
+    {
+      "caso": "06667486",
+      "assunto": "AMT Remoto Mobile - Criar um ícone no app ou informação que quando o tempo estiver zerado na aba de configurações informe que a função está desabilitada.",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "03/07/2026",
+      "dataLimite": "11/10/2026",
+      "resumo": [
+        "Criar um ícone no app ou informação que quando o tempo estiver zerado na aba de configurações informe que a função está desabilitada."
+      ]
+    },
+    {
+      "caso": "06708771",
+      "assunto": "AMT 8000 LITE -",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "15/07/2026",
+      "dataLimite": "23/10/2026",
+      "resumo": [
+        "sem resumo no caso"
+      ]
+    },
+    {
+      "caso": "06911431",
+      "assunto": "AMT Remoto Mobile (IOS) - Padronizar a aba Online > Zonas/Setores e manter como no Android",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "14/09/2026",
+      "dataLimite": "23/12/2026",
+      "resumo": [
+        "Padronizar a aba Online > Zonas/Setores e manter como no Android"
+      ]
+    },
+    {
+      "caso": "06921661",
+      "assunto": "Guardian Android + Alarmes - Ter opção de receber notificação de falha de rede elétrica com toque diferenciado",
+      "linhaProduto": "Guardian",
+      "criticidade": "Média",
+      "dataAbertura": "16/10/2026",
+      "dataLimite": "25/10/2026",
+      "resumo": [
+        "Ter opção de receber notificação de falha de rede elétrica com toque diferenciado"
+      ]
+    },
+    {
+      "caso": "06940763",
+      "assunto": "AMT Remoto Mobile (Android) - Quando inserir o campo 0  no inicio de IP informar que 0 a esquerda não é válido ou ignorar esse campo",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "22/09/2026",
+      "dataLimite": "31/12/2026",
+      "resumo": [
+        "Quando inserir o campo 0  no inicio de IP informar que 0 a esquerda não é válido ou ignorar esse campo"
+      ]
+    },
+    {
+      "caso": "06998979",
+      "assunto": "AMT REMOTO DESKTOP - Adicionar as demais centrais monitoradas a função: “Gestor de Senha”",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "08/10/2026",
+      "dataLimite": "16/01/2027",
+      "resumo": [
+        "Adicionar as demais centrais monitoradas a função: “Gestor de Senha”"
+      ]
+    },
+    {
+      "caso": "07001408",
+      "assunto": "AMT Remoto Mobile - Após finalizar a configuração do WIFI, alterar o texto informado.",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "09/10/2026",
+      "dataLimite": "17/01/2027",
+      "resumo": [
+        "Após finalizar a configuração do WIFI, alterar o texto informado."
+      ]
+    },
+    {
+      "caso": "07001825",
+      "assunto": "AMT REMOTO DESKTOP - Implementar controle personalizado de permissões por perfil de usuário",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "09/10/2026",
+      "dataLimite": "17/01/2027",
+      "resumo": [
+        "Implementar controle personalizado de permissões por perfil de usuário"
+      ]
+    },
+    {
+      "caso": "07006763",
+      "assunto": "AMT 2018 E SMART - PGM programada aceitar programação de pulso para o horário de auto ativação",
+      "linhaProduto": "Alarmes",
+      "criticidade": "Média",
+      "dataAbertura": "13/10/2026",
+      "dataLimite": "21/01/2027",
+      "resumo": [
+        "PGM programada aceitar programação de pulso para o horário de auto ativação"
+      ]
     }
   ]
 }
