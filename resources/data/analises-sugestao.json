@@ -1,17 +1,16 @@
 {
   "produto": "Análises de Sugestões",
-  "atualizadoEm": "26/11/2026",
+  "atualizadoEm": "27/11/2026",
   "casos": [
     {
-      "caso": "12345678",
+      "caso": "06444343",
+      "assunto": "AMT 2018 E SMART - Criar opção de renomear PGM via softwares",
       "linhaProduto": "Alarmes",
-      "criticidade": "Baixa",
-      "dataAbertura": "26/11/2026",
-      "dataLimite": "10/01/2027",
+      "criticidade": "Média",
+      "dataAbertura": "29/04/2026",
+      "dataLimite": "07/08/2026",
       "resumo": [
-        "Defeito reclamado ou dúvida: descrever o problema apresentado.",
-        "Informar os impactos observados no produto ou processo.",
-        "Informar detalhes adicionais necessários para a análise."
+        "Criar opção de renomear PGM via softwares"
       ]
     }
   ]
