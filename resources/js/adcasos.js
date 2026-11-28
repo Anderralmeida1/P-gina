@@ -150,7 +150,10 @@ function renderVersoes(versoes) {
     var html =
       '<article class="versao-item" id="versao-' + id + '">' +
         '<h2 class="versao-titulo caso-titulo">' +
-          'CASO - ' + esc(v.caso || 'XXXXXXX') +
+          '<span class="caso-identificacao">' +
+            '<span>CASO - ' + esc(v.caso || 'XXXXXXX') + '</span>' +
+            (v.assunto ? '<span class="caso-assunto">' + esc(v.assunto) + '</span>' : '') +
+          '</span>' +
           '<span class="version-badge ' + classeCriticidade + '">' +
             esc((v.criticidade || 'Criticidade').toUpperCase()) +
           '</span>' +
@@ -280,7 +283,7 @@ function filtrarVersoes(termo) {
   var t = normalizar(termo);
   var filtradas = versoes.filter(function (v) {
     var texto = [
-      v.caso, v.criticidade, v.dataAbertura, v.dataLimite,
+      v.caso, v.assunto, v.criticidade, v.dataAbertura, v.dataLimite,
       v.versao, v.data, v.dataExtenso, v.titulo
     ].concat(textosDe(v.resumo), textosDe(v.alteracoes)).join(' ');
     return normalizar(texto).indexOf(t) !== -1;

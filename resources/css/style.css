@@ -225,10 +225,21 @@ body {
   background: #06cb3f;
 }
 .caso-titulo {
-  /* Separa o identificador do caso da criticidade, que fica à direita. */
+  /* Separa a identificação do caso da criticidade, que fica à direita. */
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.caso-identificacao {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.caso-assunto {
+  font-size: 0.9rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }
 .caso-titulo .version-badge {
   margin-left: auto;

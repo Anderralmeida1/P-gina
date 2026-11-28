@@ -107,15 +107,16 @@ uma lista `casos`. Os registros usam esta estrutura:
 ```json
 {
   "caso": "12345678",
+  "assunto": "Falha na programação dos horários",
   "linhaProduto": "Alarmes",
   "criticidade": "Baixa",
   "dataAbertura": "27/11/2026",
   "dataLimite": "10/12/2026",
-  "imagem": "",
   "resumo": ["Primeiro item", "Segundo item"]
 }
 ```
 
+`assunto` é obrigatório e aparece abaixo do número do caso na faixa verde.
 `linhaProduto` aceita `Alarmes`, `Sensores` ou `Guardian`. No painel, os filtros
 são botões flutuantes: os selecionados ficam verdes e podem ser combinados para
 exibir os casos de qualquer uma das linhas escolhidas. Ao desativar todos os

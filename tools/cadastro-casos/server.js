@@ -104,6 +104,11 @@ function createCase(input) {
     throw Object.assign(new Error('Informe um número de caso válido.'), { status: 400 });
   }
 
+  const assunto = typeof input.assunto === 'string' ? input.assunto.trim() : '';
+  if (!assunto || assunto.length > 200) {
+    throw Object.assign(new Error('Informe um assunto válido (máximo de 200 caracteres).'), { status: 400 });
+  }
+
   if (!CRITICALITIES.has(input.criticidade)) {
     throw Object.assign(new Error('Selecione uma criticidade válida.'), { status: 400 });
   }
@@ -117,20 +122,15 @@ function createCase(input) {
     });
   }
 
-  const imagem = typeof input.imagem === 'string' ? input.imagem.trim() : '';
-  if (imagem.length > 2048) {
-    throw Object.assign(new Error('O campo de imagem deve ter no máximo 2048 caracteres.'), { status: 400 });
-  }
-
   return {
     categoria: input.categoria,
     registro: {
       caso: numero,
+      assunto,
       linhaProduto: input.linhaProduto,
       criticidade: input.criticidade,
       dataAbertura: formatDate(input.dataAbertura, 'Data de abertura'),
       dataLimite: formatDate(input.dataLimite, 'Data limite'),
-      imagem,
       resumo
     }
   };

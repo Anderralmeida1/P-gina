@@ -219,8 +219,8 @@
       </div>
 
       <div class="field field-wide">
-        <label for="imagem">Imagem (opcional)</label>
-        <input id="imagem" name="imagem" type="text" maxlength="2048" placeholder="URL ou caminho da imagem">
+        <label for="assunto">Assunto</label>
+        <input id="assunto" name="assunto" type="text" maxlength="200" required>
       </div>
 
       <div class="field field-wide">
@@ -289,10 +289,10 @@
         categoria: formData.get('categoria'),
         linhaProduto: formData.get('linhaProduto'),
         caso: formData.get('caso'),
+        assunto: formData.get('assunto'),
         criticidade: formData.get('criticidade'),
         dataAbertura: abertura.length ? `${abertura[0]}-${String(abertura[1]).padStart(2, '0')}-${String(abertura[2]).padStart(2, '0')}` : '',
         dataLimite: limite.length ? `${limite[0]}-${String(limite[1]).padStart(2, '0')}-${String(limite[2]).padStart(2, '0')}` : '',
-        imagem: formData.get('imagem'),
         resumo: String(formData.get('resumo') || '').split(/\r?\n/)
       };
 

@@ -24,6 +24,10 @@ on:
         description: Número identificador do caso
         required: true
         type: string
+      assunto:
+        description: Assunto exibido no painel (máximo de 200 caracteres)
+        required: true
+        type: string
       criticidade:
         description: Nível de criticidade
         required: true
@@ -40,10 +44,6 @@ on:
       data_limite:
         description: Data limite no formato DD/MM/AAAA
         required: true
-        type: string
-      imagem:
-        description: Caminho ou URL da imagem (opcional)
-        required: false
         type: string
       resumo:
         description: Resumo do caso; cada linha será um item
@@ -73,10 +73,10 @@ jobs:
           CATEGORIA: ${{ inputs.categoria }}
           LINHA_PRODUTO: ${{ inputs.linha_produto }}
           CASO: ${{ inputs.caso }}
+          ASSUNTO: ${{ inputs.assunto }}
           CRITICIDADE: ${{ inputs.criticidade }}
           DATA_ABERTURA: ${{ inputs.data_abertura }}
           DATA_LIMITE: ${{ inputs.data_limite }}
-          IMAGEM: ${{ inputs.imagem }}
           RESUMO: ${{ inputs.resumo }}
         run: |
           python3 - <<'PY'
@@ -112,12 +112,13 @@ jobs:
                   sys.exit(f"{campo} deve estar no formato DD/MM/AAAA.")
 
           numero = os.environ["CASO"].strip()
+          assunto = os.environ["ASSUNTO"].strip()
           criticidade = os.environ["CRITICIDADE"].strip()
           if criticidade not in {"Baixa", "Média", "Alta", "Muito Alta"}:
               sys.exit("Criticidade inválida.")
           resumos = [linha.strip() for linha in os.environ["RESUMO"].splitlines() if linha.strip()]
-          if not numero or not resumos:
-              sys.exit("Informe o número do caso e pelo menos uma linha de resumo.")
+          if not numero or not assunto or len(assunto) > 200 or not resumos:
+              sys.exit("Informe o número, um assunto de até 200 caracteres e pelo menos uma linha de resumo.")
 
           # Carrega o JSON existente e impede duplicar o mesmo número de caso.
           caminho = Path("resources/data") / arquivos[categoria]
@@ -131,11 +132,11 @@ jobs:
           # Monta o registro seguindo a estrutura já usada pelos arquivos de análise.
           casos.append({
               "caso": numero,
+              "assunto": assunto,
               "linhaProduto": linha_produto,
               "criticidade": criticidade,
               "dataAbertura": datas["DATA_ABERTURA"],
               "dataLimite": datas["DATA_LIMITE"],
-              "imagem": os.environ["IMAGEM"].strip(),
               "resumo": resumos,
           })
           dados["atualizadoEm"] = datetime.now().strftime("%d/%m/%Y")
