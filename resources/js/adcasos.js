@@ -10,6 +10,8 @@
  */
 // Arquivo de catálogo que relaciona modelos a documentos associados.
 var MODELOS_URL = 'resources/data/modelos.json';
+var LINHAS_PRODUTO = ['Alarmes', 'Sensores', 'Guardian'];
+var linhasProdutoSelecionadas = [];
 // Identificador validado recebido na URL.
 var MODELO = modeloDaUrl();
 // Caminho do JSON de dados do modelo selecionado.
@@ -52,6 +54,7 @@ function carregarChangelog() {
       renderVersoes(registros);
       renderDocumentosDoModelo();
       bindBusca();
+      bindFiltrosLinhaProduto();
     })
     .fail(function () {
       $('#changelogContent').html(
@@ -92,6 +95,14 @@ function renderSidebar(versoes) {
   $ul.append(
     '<li><a class="sidebar-link" href="#content"><i class="fas fa-arrow-up me-2"></i>Voltar ao topo</a></li>'
   );
+}
+
+/** Retorna os registros correspondentes às linhas de produto selecionadas. */
+function filtrarPorLinhaProduto(versoes) {
+  if (!linhasProdutoSelecionadas.length) { return versoes; }
+  return versoes.filter(function (versao) {
+    return linhasProdutoSelecionadas.indexOf(versao.linhaProduto) !== -1;
+  });
 }
 
 /**
@@ -232,12 +243,34 @@ function bindBusca() {
   });
 }
 
+/** Conecta as caixas de seleção dos filtros por linha de produto. */
+function bindFiltrosLinhaProduto() {
+  if (!changelogData || !Array.isArray(changelogData.casos)) { return; }
+
+  var $filtros = $('#filtrosLinhaProduto').prop('hidden', false);
+  $filtros.on('click', 'button[data-linha-produto]', function () {
+    var $button = $(this);
+    $button.attr('aria-pressed', $button.attr('aria-pressed') !== 'true');
+    linhasProdutoSelecionadas = $filtros.find('button[aria-pressed="true"]').map(function () {
+      return this.dataset.linhaProduto;
+    }).get().filter(function (linha) {
+      return LINHAS_PRODUTO.indexOf(linha) !== -1;
+    });
+
+    var registros = changelogData.casos || [];
+    renderSidebar(filtrarPorLinhaProduto(registros));
+    var termoBusca = String($('#buscaInput').val() || '').toLowerCase().trim();
+    filtrarVersoes(termoBusca);
+  });
+}
+
 /**
  * Filtra os registros pesquisando nos campos principais e textos aninhados.
  * @param {string} termo Texto digitado pelo usuário.
  */
 function filtrarVersoes(termo) {
   var versoes = (changelogData && (changelogData.casos || changelogData.versoes)) || [];
+  versoes = filtrarPorLinhaProduto(versoes);
 
   if (!termo) {
     renderVersoes(versoes);
@@ -255,7 +288,9 @@ function filtrarVersoes(termo) {
 
   if (!filtradas.length) {
     $('#changelogContent').html(
-      '<div class="alert alert-warning">Nenhum resultado encontrado para: <b>' + esc(termo) + '</b></div>'
+      termo
+        ? '<div class="alert alert-warning">Nenhum resultado encontrado para: <b>' + esc(termo) + '</b></div>'
+        : '<div class="alert alert-warning">Nenhum caso encontrado para as linhas de produto selecionadas.</div>'
     );
     return;
   }
@@ -267,7 +302,7 @@ $(document).on('click', '#sidebarVersions a[href^="#versao-"]', function () {
   var id = $(this).attr('href').substring(1);
   if ($('#' + id).length || !changelogData) { return; }
   $('#buscaInput').val('');
-  renderVersoes(changelogData.casos || changelogData.versoes || []);
+  filtrarVersoes('');
   $(this).trigger('click');
 });
 

@@ -12,6 +12,14 @@ on:
           - analises-defeito
           - analises-sugestao
           - analises-falha
+      linha_produto:
+        description: Linha de produto do caso
+        required: true
+        type: choice
+        options:
+          - Alarmes
+          - Sensores
+          - Guardian
       caso:
         description: Número identificador do caso
         required: true
@@ -63,6 +71,7 @@ jobs:
       - name: Validar e atualizar o JSON
         env:
           CATEGORIA: ${{ inputs.categoria }}
+          LINHA_PRODUTO: ${{ inputs.linha_produto }}
           CASO: ${{ inputs.caso }}
           CRITICIDADE: ${{ inputs.criticidade }}
           DATA_ABERTURA: ${{ inputs.data_abertura }}
@@ -87,6 +96,9 @@ jobs:
           categoria = os.environ["CATEGORIA"]
           if categoria not in arquivos:
               sys.exit("Categoria inválida.")
+          linha_produto = os.environ["LINHA_PRODUTO"]
+          if linha_produto not in {"Alarmes", "Sensores", "Guardian"}:
+              sys.exit("Linha de produto inválida.")
 
           # Valida datas e mantém o formato utilizado pelos dados do projeto.
           datas = {}
@@ -119,6 +131,7 @@ jobs:
           # Monta o registro seguindo a estrutura já usada pelos arquivos de análise.
           casos.append({
               "caso": numero,
+              "linhaProduto": linha_produto,
               "criticidade": criticidade,
               "dataAbertura": datas["DATA_ABERTURA"],
               "dataLimite": datas["DATA_LIMITE"],

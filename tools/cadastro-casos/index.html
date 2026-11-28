@@ -33,6 +33,19 @@
       color: #58645c;
       line-height: 1.5;
     }
+    .environment-warning {
+      margin: 1rem 0;
+      padding: 1rem;
+      border: 1px solid #e6a700;
+      border-radius: 0.4rem;
+      background: #fff8e1;
+      color: #594300;
+      line-height: 1.5;
+    }
+    .environment-warning a {
+      color: inherit;
+      font-weight: 700;
+    }
     .delete-section {
       margin-top: 2rem;
       padding-top: 1.5rem;
@@ -150,6 +163,12 @@
       Preencha os dados abaixo. Ao salvar, o registro será adicionado ao JSON escolhido
       dentro do projeto aberto no VS Code.
     </p>
+    <div id="environment-warning" class="environment-warning" role="alert" hidden>
+      Para listar, cadastrar ou excluir casos, abra esta ferramenta pelo servidor local.
+      Inicie a tarefa <strong>Iniciar formulário de casos</strong> no VS Code e acesse
+      <a href="http://127.0.0.1:4179/">http://127.0.0.1:4179/</a>.
+      Abrir este arquivo diretamente (file://) impede a comunicação com a API.
+    </div>
 
     <!-- O formulário envia os dados ao servidor local iniciado pela tarefa do VS Code. -->
     <form id="case-form">
@@ -160,6 +179,16 @@
           <option value="analises-defeito">Análises de Defeito</option>
           <option value="analises-sugestao">Análises de Sugestões</option>
           <option value="analises-falha">Análises de Falhas no Processo</option>
+        </select>
+      </div>
+
+      <div class="field field-wide">
+        <label for="linha-produto">Linha de produto</label>
+        <select id="linha-produto" name="linhaProduto" required>
+          <option value="">Selecione uma linha de produto</option>
+          <option>Alarmes</option>
+          <option>Sensores</option>
+          <option>Guardian</option>
         </select>
       </div>
 
@@ -232,6 +261,15 @@
   </main>
 
   <script>
+    // O navegador não permite que uma página file:// acesse a API local por caminhos relativos.
+    if (window.location.protocol === 'file:') {
+      document.getElementById('environment-warning').hidden = false;
+      document.querySelectorAll('#case-form input, #case-form select, #case-form textarea, #case-form button, ' +
+        '#delete-form select, #delete-form button').forEach((control) => {
+        control.disabled = true;
+      });
+    }
+
     // Converte a data ISO do navegador para o formato de texto esperado pelo servidor.
     function toDateParts(value) {
       return value ? value.split('-').map(Number) : [];
@@ -249,6 +287,7 @@
       const limite = toDateParts(formData.get('dataLimite'));
       const payload = {
         categoria: formData.get('categoria'),
+        linhaProduto: formData.get('linhaProduto'),
         caso: formData.get('caso'),
         criticidade: formData.get('criticidade'),
         dataAbertura: abertura.length ? `${abertura[0]}-${String(abertura[1]).padStart(2, '0')}-${String(abertura[2]).padStart(2, '0')}` : '',

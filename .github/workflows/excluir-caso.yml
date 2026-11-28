@@ -12,6 +12,14 @@ on:
           - analises-defeito
           - analises-sugestao
           - analises-falha
+      linha_produto:
+        description: Linha de produto do caso
+        required: true
+        type: choice
+        options:
+          - Alarmes
+          - Sensores
+          - Guardian
       caso:
         description: Número do caso
         required: true
@@ -54,6 +62,7 @@ jobs:
       - name: Localizar e excluir o caso
         env:
           CATEGORIA: ${{ inputs.categoria }}
+          LINHA_PRODUTO: ${{ inputs.linha_produto }}
           CASO: ${{ inputs.caso }}
           CRITICIDADE: ${{ inputs.criticidade }}
           DATA_ABERTURA: ${{ inputs.data_abertura }}
@@ -76,6 +85,9 @@ jobs:
           categoria = os.environ["CATEGORIA"]
           if categoria not in arquivos:
               sys.exit("Categoria inválida.")
+          linha_produto = os.environ["LINHA_PRODUTO"]
+          if linha_produto not in {"Alarmes", "Sensores", "Guardian"}:
+              sys.exit("Linha de produto inválida.")
 
           # Exige datas válidas e no formato DD/MM/AAAA para identificar o caso sem ambiguidades.
           datas = {}
@@ -106,6 +118,7 @@ jobs:
           correspondencias = [
               indice for indice, registro in enumerate(casos)
               if str(registro.get("caso", "")).strip() == numero
+              and registro.get("linhaProduto") == linha_produto
               and registro.get("criticidade") == criticidade
               and registro.get("dataAbertura") == datas["DATA_ABERTURA"]
               and registro.get("dataLimite") == datas["DATA_LIMITE"]

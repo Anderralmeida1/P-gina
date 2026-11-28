@@ -20,6 +20,7 @@ const CATEGORY_FILES = Object.freeze({
   'analises-sugestao': 'analises-sugestao.json',
   'analises-falha': 'analises-falha.json'
 });
+const PRODUCT_LINES = new Set(['Alarmes', 'Sensores', 'Guardian']);
 const CRITICALITIES = new Set(['Baixa', 'Média', 'Alta', 'Muito Alta']);
 
 /** Envia uma resposta JSON com o status HTTP especificado. */
@@ -94,6 +95,10 @@ function createCase(input) {
     throw Object.assign(new Error('Selecione uma categoria válida.'), { status: 400 });
   }
 
+  if (!PRODUCT_LINES.has(input.linhaProduto)) {
+    throw Object.assign(new Error('Selecione uma linha de produto válida.'), { status: 400 });
+  }
+
   const numero = typeof input.caso === 'string' ? input.caso.trim() : '';
   if (!numero || numero.length > 100) {
     throw Object.assign(new Error('Informe um número de caso válido.'), { status: 400 });
@@ -121,6 +126,7 @@ function createCase(input) {
     categoria: input.categoria,
     registro: {
       caso: numero,
+      linhaProduto: input.linhaProduto,
       criticidade: input.criticidade,
       dataAbertura: formatDate(input.dataAbertura, 'Data de abertura'),
       dataLimite: formatDate(input.dataLimite, 'Data limite'),
@@ -193,7 +199,8 @@ function listCases(category) {
     index,
     fingerprint: fingerprint(record),
     label: `Caso ${record.caso || '(sem número)'} | ${record.criticidade || 'Sem criticidade'} | ` +
-      `${record.dataAbertura || 'Sem data'} | registro ${index + 1}`
+      `${record.dataAbertura || 'Sem data'} | ${record.linhaProduto || 'Sem linha de produto'} | ` +
+      `registro ${index + 1}`
   }));
 }
 
