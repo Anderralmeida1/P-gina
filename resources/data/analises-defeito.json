@@ -1,40 +1,7 @@
 {
   "produto": "Análises de Defeito",
-  "atualizadoEm": "26/11/2026",
+  "atualizadoEm": "27/11/2026",
   "casos": [
-    {
-      "caso": "12345678",
-      "linhaProduto": "Alarmes",
-      "criticidade": "Baixa",
-      "dataAbertura": "26/11/2026",
-      "dataLimite": "01/12/2026",
-      "imagem": "",
-      "resumo": [
-        "Não prioriza a programação de ATV e DTV para feriados, executando os horários configurados para o dia da semana correspondente."
-      ]
-    },
-    {
-      "caso": "12345678",
-      "linhaProduto": "Alarmes",
-      "criticidade": "Média",
-      "dataAbertura": "26/11/2026",
-      "dataLimite": "10/01/2027",
-      "imagem": "",
-      "resumo": [
-        "Não prioriza a programação de ATV e DTV para feriados, executando os horários configurados para o dia da semana correspondente."
-      ]
-    },
-    {
-      "caso": "12345678",
-      "linhaProduto": "Alarmes",
-      "criticidade": "Alta",
-      "dataAbertura": "26/11/2026",
-      "dataLimite": "10/01/2027",
-      "imagem": "",
-      "resumo": [
-        "Não prioriza a programação de ATV e DTV para feriados, executando os horários configurados para o dia da semana correspondente."
-      ]
-    },
     {
       "caso": "12345678",
       "linhaProduto": "Alarmes",
@@ -44,6 +11,16 @@
       "imagem": "",
       "resumo": [
         "Não prioriza a programação de ATV e DTV para feriados, executando os horários configurados para o dia da semana correspondente."
+      ]
+    },
+    {
+      "caso": "06897829",
+      "criticidade": "Média",
+      "dataAbertura": "09/09/2026",
+      "dataLimite": "18/12/2026",
+      "imagem": "",
+      "resumo": [
+        "Guardian Android + Alarmes - Não recebe notificação com bloqueio de envio de partição 0 ativo"
       ]
     }
   ]
